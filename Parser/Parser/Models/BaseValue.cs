@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parser.Models
 {
-    public abstract class Base
+    public abstract class BaseValue
     {
     }
 }

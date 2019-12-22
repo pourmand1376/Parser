@@ -1,6 +1,6 @@
 ﻿namespace Parser.Models
 {
-    public class Variable:Base
+    public class Variable:BaseValue
     {
         public Variable()
         {

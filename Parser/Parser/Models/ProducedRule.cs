@@ -8,6 +8,6 @@ namespace Parser.Models
 {
    public class ProducedRule
     {
-        public List<Base> ProducedItems { get; set; }
+        public List<BaseValue> ProducedItems { get; set; }
     }
 }

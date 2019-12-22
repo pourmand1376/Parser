@@ -53,7 +53,7 @@
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="LexicalAnalyzer.cs" />
-    <Compile Include="Models\Base.cs" />
+    <Compile Include="Models\BaseValue.cs" />
     <Compile Include="Models\ProducedRule.cs" />
     <Compile Include="Models\Terminal.cs" />
     <Compile Include="Models\Variable.cs" />

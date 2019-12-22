@@ -2,7 +2,7 @@
 
 namespace Parser.Models
 {
-    public class Terminal:Base
+    public class Terminal:BaseValue
     {
         public Terminal(string value)
         {

@@ -10,6 +10,8 @@ namespace Parser
 {
     public class LexicalAnalyzer
     {
+        // Variable -> ProducedRule 
+        // Produced Rule is a list of variable or terminals
         private Dictionary<Variable, List<ProducedRule>> _grammerRules;
 
         public string Data { get; set; }
@@ -35,7 +37,7 @@ namespace Parser
             Regex text = new Regex(@"<(?<variable>[\w-]+)>|\""(?<terminal>[\w-.,]+)?\""",RegexOptions.Compiled);
 
             Variable head = new Variable();
-            ProducedRule rule = new ProducedRule(){ProducedItems = new List<Base>()};
+            ProducedRule rule = new ProducedRule(){ProducedItems = new List<BaseValue>()};
 
 
             var matches=text.Matches(line);
