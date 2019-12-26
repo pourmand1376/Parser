@@ -52,11 +52,13 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="LexicalAnalyzer.cs" />
-    <Compile Include="Models\BaseValue.cs" />
-    <Compile Include="Models\ProducedRule.cs" />
+    <Compile Include="GrammarADT.cs" />
+    <Compile Include="Lexical\LexicalAnalyzer.cs" />
+    <Compile Include="Models\Symbol.cs" />
+    <Compile Include="Models\RightHandSide.cs" />
     <Compile Include="Models\Terminal.cs" />
     <Compile Include="Models\Variable.cs" />
+    <Compile Include="Parse\Preprocessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmMain.resx">

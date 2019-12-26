@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parser.Models
 {
-    public abstract class BaseValue
+    public abstract class Symbol
     {
     }
 }

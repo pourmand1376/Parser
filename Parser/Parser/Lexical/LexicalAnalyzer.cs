@@ -4,22 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Parser.Lexical;
 using Parser.Models;
 
 namespace Parser
 {
+    
+
     public class LexicalAnalyzer
     {
         // Variable -> ProducedRule 
         // Produced Rule is a list of variable or terminals
-        private Dictionary<Variable, List<ProducedRule>> _grammerRules;
+        public GrammarADT GrammarAdt { get;  }
 
         public string Data { get; set; }
 
         public LexicalAnalyzer(string data)
         {
-            _grammerRules = new Dictionary<Variable, List<ProducedRule>>();
             Data = data;
+            GrammarAdt = new GrammarADT();
         }
 
         public void Tokenize()
@@ -34,12 +37,12 @@ namespace Parser
 
         private void LineTokenExtractor(string line)
         {
-            Regex text = new Regex(@"<(?<variable>[\w-]+)>|\""(?<terminal>[\w-.,]+)?\""",RegexOptions.Compiled);
+            Regex text = new Regex(@"<(?<variable>[\w-]+)>|""(?<terminal>[^""<>:]+)?""",RegexOptions.Compiled);
 
             Variable head = new Variable();
-            ProducedRule rule = new ProducedRule(){ProducedItems = new List<BaseValue>()};
+            RightHandSide rule = new RightHandSide(){SymbolList = new List<Symbol>()};
 
-
+            
             var matches=text.Matches(line);
             
             foreach (Match match in matches)
@@ -51,22 +54,26 @@ namespace Parser
                     {
                         head.Name = variable.Value;
                         //add list of production rules if there is more than one production rule
-                        if(!_grammerRules.ContainsKey(head))
-                            _grammerRules.Add(head,new List<ProducedRule>());
+                        if(!GrammarAdt.GrammerRules.ContainsKey(head)) GrammarAdt.GrammerRules.Add(head,new List<RightHandSide>());
                     }
                     else
                     {
-                        rule.ProducedItems.Add(new Variable(variable.Value));
+                        rule.SymbolList.Add(new Variable(variable.Value));
                     }
                 }
                 var terminal = match.Groups["terminal"];
                 if (terminal.Success)
                 {
-                    rule.ProducedItems.Add(new Terminal(terminal.Value));
+                    rule.SymbolList.Add(new Terminal(terminal.Value));
                 }
             }
 
-            var productionRules = _grammerRules[head];
+            if (GrammarAdt.HeadVariable == null)
+            {
+                GrammarAdt.HeadVariable = head;
+            }
+
+            var productionRules = GrammarAdt.GrammerRules[head];
             productionRules.Add(rule);
         }
 

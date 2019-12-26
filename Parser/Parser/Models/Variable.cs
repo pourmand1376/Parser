@@ -1,6 +1,6 @@
 ﻿namespace Parser.Models
 {
-    public class Variable:BaseValue
+    public class Variable:Symbol
     {
         public Variable()
         {
@@ -25,6 +25,11 @@
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Name.ToString();
         }
     }
 }
