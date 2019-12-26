@@ -28,15 +28,9 @@ namespace Parser.Lexical
         {
             var producedRules = GrammerRules[variable];
             foreach (var producedRule in producedRules
-                .Where(producedRule => producedRule.SymbolList.Count == 1))
+                .Where(producedRule => producedRule.SymbolList.Count == 0))
             {
-                if (producedRule.SymbolList[0] is Terminal terminal)
-                {
-                    if (string.IsNullOrEmpty(terminal.Value))
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
 
             return false;

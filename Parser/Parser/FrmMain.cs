@@ -39,6 +39,8 @@ namespace Parser
 
         private void button1_Click(object sender, EventArgs e)
         {
+            listBoxGrammar.Items.Clear();
+            listBoxFirst.Items.Clear();
             var text = File.ReadAllText(textBox1.Text);
             LexicalAnalyzer lex = new LexicalAnalyzer(text);
             lex.Tokenize();
@@ -67,14 +69,19 @@ namespace Parser
 
         private void btnPreprocess_Click(object sender,EventArgs e)
         {
+            listBoxFirst.Items.Clear();
             Preprocessor preprocessor = new Preprocessor(_grammarAdt);
-            preprocessor.FirstTerminals(_grammarAdt.HeadVariable);
+            foreach (Variable grammerRulesKey in _grammarAdt.GrammerRules.Keys)
+            {
+                preprocessor.FirstTerminals(grammerRulesKey);    
+            }
+            
             foreach (KeyValuePair<Symbol, HashSet<Terminal>> keyValuePair in _grammarAdt.FirstSet)
             {
                 if (keyValuePair.Key is Terminal terminal)
-                    listBox1.Items.Add(terminal.Value + ":{ " + string.Join(",", keyValuePair.Value) + "}");
+                    listBoxFirst.Items.Add(terminal.Value + ":{ " + string.Join(",", keyValuePair.Value) + "}");
                 else if (keyValuePair.Key is Variable var)
-                    listBox1.Items.Add(var.Name + " :{ " + string.Join(",", keyValuePair.Value) + "}");
+                    listBoxFirst.Items.Add(var.Name + " :{ " + string.Join(",", keyValuePair.Value) + "}");
             }
         }
 
