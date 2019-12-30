@@ -71,9 +71,19 @@ namespace Parser
                 preprocessor.FirstTerminals(grammerRulesKey);
             }
 
+            foreach ( Variable grammerRulesKey in _grammarAdt.GrammerRules.Keys )
+            {
+                preprocessor.FollowTerminals(grammerRulesKey);
+            }
+
             foreach ( KeyValuePair<Symbol,HashSet<Terminal>> keyValuePair in _grammarAdt.FirstSet )
             {
                 listBoxFirst.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
+            }
+
+            foreach (KeyValuePair<Symbol, HashSet<Terminal>> keyValuePair in _grammarAdt.FollowSet) 
+            {
+                listBoxFollow.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
             }
         }
 

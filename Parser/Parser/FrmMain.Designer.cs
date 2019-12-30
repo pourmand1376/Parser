@@ -37,11 +37,11 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.listBoxGrammar = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.listBoxFollow = new System.Windows.Forms.ListBox();
             this.listBoxFirst = new System.Windows.Forms.ListBox();
             this.btnPreprocess = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -132,7 +132,7 @@
             // 
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.listBox1);
+            this.tabPage2.Controls.Add(this.listBoxFollow);
             this.tabPage2.Controls.Add(this.listBoxFirst);
             this.tabPage2.Controls.Add(this.btnPreprocess);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -143,6 +143,15 @@
             this.tabPage2.Text = "Preprocessing Phase";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(251, 47);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Follow Sets";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -151,6 +160,14 @@
             this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "First Sets";
+            // 
+            // listBoxFollow
+            // 
+            this.listBoxFollow.FormattingEnabled = true;
+            this.listBoxFollow.Location = new System.Drawing.Point(187, 65);
+            this.listBoxFollow.Name = "listBoxFollow";
+            this.listBoxFollow.Size = new System.Drawing.Size(175, 277);
+            this.listBoxFollow.TabIndex = 3;
             // 
             // listBoxFirst
             // 
@@ -169,23 +186,6 @@
             this.btnPreprocess.Text = "Preprocess";
             this.btnPreprocess.UseVisualStyleBackColor = true;
             this.btnPreprocess.Click += new System.EventHandler(this.btnPreprocess_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(251, 47);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Follow Sets";
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(187, 65);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(175, 277);
-            this.listBox1.TabIndex = 3;
             // 
             // FrmMain
             // 
@@ -222,7 +222,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox listBoxFirst;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox listBoxFollow;
     }
 }
 
