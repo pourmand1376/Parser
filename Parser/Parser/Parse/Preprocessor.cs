@@ -7,6 +7,7 @@ namespace Parser.Parse
 {
     public class Preprocessor
     {
+        
         private GrammarADT _grammarAdt { get; }
 
         public Preprocessor(GrammarADT grammarAdt)
@@ -32,7 +33,7 @@ namespace Parser.Parse
             var baseVariable = symbol.GetVariable();
             if (_grammarAdt.HasEmptyRule(baseVariable))
             {
-                firstSet.Add(new Terminal(""));
+                firstSet.Add(new Terminal(ConstValues.Epsilon));
             }
             //submit to dictionary till now
             _grammarAdt.FirstSet.Add(symbol,firstSet);

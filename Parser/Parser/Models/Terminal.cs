@@ -9,12 +9,7 @@ namespace Parser.Models
             Value = value;
             SymbolType = SymbolType.Terminal;
         }
-        public string Value { get; set; }
-        public override string ToString()
-        {
-            return Value;
-        }
-
+        
         public override bool Equals(object obj)
         {
             if (obj is Terminal term)
@@ -23,6 +18,11 @@ namespace Parser.Models
             }
 
             return false;
+        }
+
+        protected bool Equals(Terminal other)
+        {
+            return other.Value == Value;
         }
 
         public override int GetHashCode()

@@ -6,30 +6,29 @@
         {
             SymbolType = SymbolType.Variable;
         }
-        public Variable(string name):this()
+        public Variable(string value):this()
         {
-            Name = name;
+            Value = value;
         }
-        public string Name { get; set; }
 
         public override bool Equals(object obj)
         {
             if (obj is Variable var)
             {
-                return var.Name == Name;
+                return var.Value == Value;
             }
 
             return false;
         }
 
-        public override int GetHashCode()
+        protected bool Equals(Variable other)
         {
-            return Name.GetHashCode();
+            return other.Value == Value;
         }
 
-        public override string ToString()
+        public override int GetHashCode()
         {
-            return Name.ToString();
+            return Value.GetHashCode();
         }
     }
 }

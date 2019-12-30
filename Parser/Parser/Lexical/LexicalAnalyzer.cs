@@ -15,6 +15,7 @@ namespace Parser
     {
         // Variable -> ProducedRule 
         // Produced Rule is a list of variable or terminals
+
         public GrammarADT GrammarAdt { get;  }
 
         public string Data { get; set; }
@@ -50,23 +51,30 @@ namespace Parser
                 var variable = match.Groups["variable"];
                 if (variable.Success)
                 {
-                    if (head.Name==null) //first Variable
+                    if (head.Value==null) //first Variable
                     {
-                        head.Name = variable.Value;
+                        head.Value = variable.Value;
                         //add list of production rules if there is more than one production rule
-                        if(!GrammarAdt.GrammerRules.ContainsKey(head)) GrammarAdt.GrammerRules.Add(head,new List<RightHandSide>());
+                        if(!GrammarAdt.GrammerRules.ContainsKey(head)) 
+                            GrammarAdt.GrammerRules.Add(head,new List<RightHandSide>());
                     }
                     else
                     {
                         rule.SymbolList.Add(new Variable(variable.Value));
                     }
+                    continue;
                 }
                 var terminal = match.Groups["terminal"];
                 if (terminal.Success)
                 {
                     rule.SymbolList.Add(new Terminal(terminal.Value));
+                    continue;
                 }
+
+                //if it comes here then it's epsilon
+                rule.SymbolList.Add(new Terminal(ConstValues.Epsilon));
             }
+            
 
             if (GrammarAdt.HeadVariable == null)
             {

@@ -10,6 +10,8 @@ namespace Parser.Models
     {
         public SymbolType SymbolType { get; set; }
 
+        public string Value { get; set; }
+
         public Terminal GetTerminal()
         {
             if (SymbolType == SymbolType.Terminal)
@@ -22,6 +24,15 @@ namespace Parser.Models
             if(SymbolType==SymbolType.Variable)
             return (Variable) this;
             throw new Exception("Specified cast is not valid");
+        }
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Value;
         }
     }
 }
