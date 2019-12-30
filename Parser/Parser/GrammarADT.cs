@@ -27,13 +27,7 @@ namespace Parser.Lexical
         public bool HasEmptyRule(Variable variable)
         {
             var producedRules = GrammerRules[variable];
-            foreach (var producedRule in producedRules
-                .Where(producedRule => producedRule.SymbolList.Count == 0))
-            {
-                return true;
-            }
-
-            return false;
+            return producedRules.Any(p => p.SymbolList.Count == 0);
         }
     }
 }

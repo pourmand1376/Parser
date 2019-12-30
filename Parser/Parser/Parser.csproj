@@ -56,6 +56,7 @@
     <Compile Include="Lexical\LexicalAnalyzer.cs" />
     <Compile Include="Models\Symbol.cs" />
     <Compile Include="Models\RightHandSide.cs" />
+    <Compile Include="Models\SymbolType.cs" />
     <Compile Include="Models\Terminal.cs" />
     <Compile Include="Models\Variable.cs" />
     <Compile Include="Parse\Preprocessor.cs" />

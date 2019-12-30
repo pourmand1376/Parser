@@ -4,9 +4,9 @@
     {
         public Variable()
         {
-            
+            SymbolType = SymbolType.Variable;
         }
-        public Variable(string name)
+        public Variable(string name):this()
         {
             Name = name;
         }

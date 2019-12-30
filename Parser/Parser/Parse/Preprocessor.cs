@@ -22,14 +22,14 @@ namespace Parser.Parse
                 return;
             }
             HashSet<Terminal> firstSet = new HashSet<Terminal>();
-            if (symbol is Terminal term)
+            if (symbol.SymbolType==SymbolType.Terminal)
             {
-                firstSet.Add(term);
+                firstSet.Add(symbol.GetTerminal());
                 _grammarAdt.FirstSet.Add(symbol,firstSet);
                 return;
             }
             
-            var baseVariable = symbol as Variable;
+            var baseVariable = symbol.GetVariable();
             if (_grammarAdt.HasEmptyRule(baseVariable))
             {
                 firstSet.Add(new Terminal(""));
@@ -43,16 +43,20 @@ namespace Parser.Parse
             {
                 for (int i = 0; i < rightHandSide.SymbolList.Count; i++)
                 {
-                    if (rightHandSide.SymbolList[i] is Terminal terminal)
-                    {
-                        _grammarAdt.FirstSet[symbol].Add(terminal);
+                    var rightHandSideValue = rightHandSide.SymbolList[i];
+                    if (rightHandSideValue.SymbolType==SymbolType.Terminal)
+                    { 
+                        _grammarAdt.FirstSet[symbol].Add(rightHandSideValue.GetTerminal());
                         break;
                     }
 
-                    var variable = rightHandSide.SymbolList[i] as Variable;
+                    var variable = rightHandSide.SymbolList[i].GetVariable();
                     //Calculate First Terminal
                     FirstTerminals(variable);
-                    foreach (Terminal terminalOfVariable in _grammarAdt.FirstSet[variable])
+
+                    Terminal[] terminals= new Terminal[_grammarAdt.FirstSet[variable].Count];
+                     _grammarAdt.FirstSet[variable].CopyTo(terminals);
+                    foreach (Terminal terminalOfVariable in terminals)
                     {
                         _grammarAdt.FirstSet[symbol].Add(terminalOfVariable);
                     }
