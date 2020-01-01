@@ -146,7 +146,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(251, 47);
+            this.label3.Location = new System.Drawing.Point(446, 49);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 13);
             this.label3.TabIndex = 4;
@@ -164,9 +164,9 @@
             // listBoxFollow
             // 
             this.listBoxFollow.FormattingEnabled = true;
-            this.listBoxFollow.Location = new System.Drawing.Point(187, 65);
+            this.listBoxFollow.Location = new System.Drawing.Point(327, 65);
             this.listBoxFollow.Name = "listBoxFollow";
-            this.listBoxFollow.Size = new System.Drawing.Size(175, 277);
+            this.listBoxFollow.Size = new System.Drawing.Size(307, 277);
             this.listBoxFollow.TabIndex = 3;
             // 
             // listBoxFirst
@@ -174,7 +174,7 @@
             this.listBoxFirst.FormattingEnabled = true;
             this.listBoxFirst.Location = new System.Drawing.Point(6, 64);
             this.listBoxFirst.Name = "listBoxFirst";
-            this.listBoxFirst.Size = new System.Drawing.Size(175, 277);
+            this.listBoxFirst.Size = new System.Drawing.Size(315, 277);
             this.listBoxFirst.TabIndex = 3;
             // 
             // btnPreprocess

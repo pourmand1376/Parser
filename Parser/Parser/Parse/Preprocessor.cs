@@ -26,20 +26,20 @@ namespace Parser.Parse
                         variable.Firsts.AddRange(FirstSet(variable.Definitions));
                         variable.IsCalculatingFirst = false;
                         variable.FirstReady = true;
-                        variable.Firsts = variable.Firsts.Distinct().ToList();
                     }
 
                 }
             }
-            
+            RemoveDuplicates();
         }
-
+        
         public void CalculateAllFollows()
         {
             GrammarRules.HeadVariable.Follows.Add(Terminal.EndOfFile);
             CalculateFollowSets();
             ClearAllFollowReady();
             CalculateFollowSets();
+            RemoveDuplicates();
         }
 
         private void ClearAllFollowReady()
@@ -49,6 +49,18 @@ namespace Parser.Parse
                 if ( symbolsValue is Variable variable )
                 { 
                     variable.FollowReady = false;   
+                }
+            }
+        }
+
+        private void RemoveDuplicates()
+        {
+            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
+            {
+                if ( symbolsValue is Variable variable )
+                {
+                    variable.Follows = variable.Follows.Distinct().ToList();
+                    variable.Firsts = variable.Firsts.Distinct().ToList();
                 }
             }
         }
@@ -62,7 +74,6 @@ namespace Parser.Parse
                     {
                         variable.Follows.AddRange(FollowSets(variable));
                         variable.FollowReady = true;
-                        variable.Follows = variable.Follows.Distinct().ToList();
                     }
                 }
             }
@@ -112,6 +123,7 @@ namespace Parser.Parse
                                     .Where(term => !term.Equals(Terminal.Epsilon)));
                         }
                     }
+                    //if you couldn't all any terminal at this rule
                     if ( canBeEmpty ) terminals.Add(Terminal.Epsilon);
                     return terminals;
                 })
@@ -120,22 +132,27 @@ namespace Parser.Parse
 
         public List<Terminal> FollowSets(Variable variable)
         {
+            //preventing stackoverflow exceptions
             if (variable.IsCalculatingFollow)
                 return variable.Follows;
 
             variable.IsCalculatingFollow = true;
             var result = GrammarRules.Symbols.Values.SelectMany(symbol =>
              {
+                 //if it's terminal do nothing
                  if ( !( symbol is Variable currentVar ) ) return new List<Terminal>();
+
                  List<Terminal> follow = new List<Terminal>();
+                 //go over all rules that contain the grammar
                  foreach ( IEnumerable<ISymbol> currentRule in currentVar.Definitions
                      .Where(rule => rule.Contains(variable)) )
                  {
 
                      var tempCurrentRule = currentRule;
-
+                     //while you have it
                      while ( tempCurrentRule.Contains(variable) )
                      {
+                         //skip till you get to it
                          tempCurrentRule = tempCurrentRule.SkipWhile(s => !s.Equals(variable)).Skip(1);
                          if ( tempCurrentRule.Any() )
                          {
@@ -153,6 +170,7 @@ namespace Parser.Parse
                                  follow.AddRange(currentVar.Follows);
                              }
                          }
+                         //<D> ::= "a"<D>
                          else if ( !currentVar.Equals(variable) )
                          {
                              if ( !currentVar.FollowReady )
