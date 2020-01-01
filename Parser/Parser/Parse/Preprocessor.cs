@@ -20,10 +20,10 @@ namespace Parser.Parse
             {
                 if (symbolsValue is Variable variable)
                 {
-                    if (!variable.FirstReady)
+                    if (variable.Firsts.Count==0)
                     {
                         variable.IsCalculatingFirst = true;
-                        variable.Firsts = FirstSet(variable.Definitions);
+                        variable.Firsts = (List<Terminal>) FirstSet(variable.Definitions);
                         variable.IsCalculatingFirst = false;
                     }
 
@@ -33,20 +33,19 @@ namespace Parser.Parse
 
         public void CalculateFollowSets()
         {
-            GrammarRules.HeadVariable.Follows.Add(Terminal.EndOfFile);
             foreach (ISymbol symbolsValue in GrammarRules.Symbols.Values)
             {
                 if (symbolsValue is Variable variable)
                 {
-                    if (!variable.FollowReady)
+                    if (variable.Follows.Count==0)
                     {
-                        variable.Follows = FollowSets(variable);
+                        variable.Follows = (List<Terminal>) FollowSets(variable);
                     }
                 }
             }
         }
 
-        private List<Terminal> FirstSet(List<IEnumerable<ISymbol>> rules)
+        private IEnumerable<Terminal> FirstSet(List<IEnumerable<ISymbol>> rules)
         {
             return rules.SelectMany(rule =>
                 {
@@ -68,13 +67,12 @@ namespace Parser.Parse
                             if (variable.IsCalculatingFirst)
                                 return new List<Terminal>();
 
-                            if (!variable.FirstReady)
+                            if (variable.Firsts == null)
                             {
                                 variable.IsCalculatingFirst = true;
                                 var first = FirstSet(variable.Definitions);
                                 variable.IsCalculatingFirst = false;
-                                variable.Firsts = first;
-                                variable.FirstReady = true;
+                                variable.Firsts = (List<Terminal>) first;
                             }
 
                             var firsts = variable.Firsts;
@@ -96,9 +94,11 @@ namespace Parser.Parse
                 .Distinct().ToList();
         }
 
-        private List<Terminal> FollowSets(Variable variable)
+        public IEnumerable<Terminal> FollowSets(Variable variable)
         {
-            
+//            if (variable.IsCalculating)
+//                return new List<Terminal>();
+//            variable.IsCalculating = true;
             var result= GrammarRules.Symbols.Values.SelectMany(symbol =>
             {
                 if (!(symbol is Variable currentVar)) return new List<Terminal>();
@@ -108,37 +108,31 @@ namespace Parser.Parse
                 {
                     
                     var tempCurrentRule = currentRule;
-                    //if it still contains that variable
+
                     while (tempCurrentRule.Contains(variable))
                     {
-                        //go forward till you arrive to the point the variable exists
                         tempCurrentRule = tempCurrentRule.SkipWhile(s => !s.Equals(variable)).Skip(1);
-                        //is it's normal!
                         if (tempCurrentRule.Any())
                         {
                             var firsts = FirstSet(new List<IEnumerable<ISymbol>>() {tempCurrentRule});
                             follow.AddRange(firsts.Where(t => !t.Equals(Terminal.Epsilon)));
-
                             if (firsts.Contains(Terminal.Epsilon))
                             {
-                                if (currentVar.FollowReady)
+                                if (currentVar.Follows == null)
                                 {
                                     var follows = FollowSets(currentVar);
-                                    currentVar.Follows.AddRange(follows);
-                                    currentVar.FollowReady = true;
+                                    currentVar.Follows = (List<Terminal>) follows;
                                 }
 
                                 follow.AddRange(currentVar.Follows);
                             }
                         }
-                        // <D> ::= "d" <D>
                         else if (!currentVar.Equals(variable))
                         {
-                            if (!currentVar.FollowReady)
+                            if (currentVar.Follows == null)
                             {
                                 var follows = FollowSets(currentVar);
-                                currentVar.Follows.AddRange(follows);
-                                currentVar.FollowReady = true;
+                                currentVar.Follows = (List<Terminal>) follows;
                             }
 
                             follow.AddRange(currentVar.Follows);
@@ -147,7 +141,7 @@ namespace Parser.Parse
                 }
                 return follow;
             }).Distinct().ToList();
-            
+            //variable.IsCalculating = false;
             return result;
         }
     }
