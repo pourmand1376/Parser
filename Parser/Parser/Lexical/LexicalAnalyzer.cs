@@ -17,7 +17,7 @@ namespace Parser
 
         private readonly GrammarRules _grammarRules;
 
-        public string Data { get; set; }
+        private string Data { get; set; }
 
         public LexicalAnalyzer(string data)
         {

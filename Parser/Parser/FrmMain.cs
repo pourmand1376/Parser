@@ -56,26 +56,20 @@ namespace Parser
         private void btnPreprocess_Click(object sender,EventArgs e)
         {
             listBoxFirst.Items.Clear();
-//            Preprocessor preprocessor = new Preprocessor(_grammarRules);
-//            foreach ( Variable grammerRulesKey in _grammarRules.GrammerRules.Keys )
-//            {
-//                preprocessor.FirstTerminals(grammerRulesKey);
-//            }
-//
-//            foreach ( Variable grammerRulesKey in _grammarRules.GrammerRules.Keys )
-//            {
-//                preprocessor.FollowTerminals(grammerRulesKey);
-//            }
-//
-//            foreach ( KeyValuePair<ISymbol,HashSet<Terminal>> keyValuePair in _grammarRules.FirstSet )
-//            {
-//                listBoxFirst.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
-//            }
-//
-//            foreach (KeyValuePair<ISymbol, HashSet<Terminal>> keyValuePair in _grammarRules.FollowSet) 
-//            {
-//                listBoxFollow.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
-//            }
+            listBoxFollow.Items.Clear();
+
+            Preprocessor preprocessor = new Preprocessor(_grammarRules);
+            preprocessor.CalculateAllFirsts();
+            preprocessor.CalculateFollowSets();
+
+            foreach (ISymbol symbol in _grammarRules.Symbols.Values)
+            {
+                if (symbol is Variable variable)
+                {
+                    listBoxFirst.Items.Add(variable.ShowFirsts());
+                    listBoxFollow.Items.Add(variable.ShowFollows());
+                }
+            }
         }
 
         private void FrmMain_Load(object sender,EventArgs e)
