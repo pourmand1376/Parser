@@ -26,10 +26,12 @@ namespace Parser.Parse
                         variable.Firsts.AddRange(FirstSet(variable.Definitions));
                         variable.IsCalculatingFirst = false;
                         variable.FirstReady = true;
+                        variable.Firsts = variable.Firsts.Distinct().ToList();
                     }
 
                 }
             }
+            
         }
 
         public void CalculateAllFollows()
@@ -60,6 +62,7 @@ namespace Parser.Parse
                     {
                         variable.Follows.AddRange(FollowSets(variable));
                         variable.FollowReady = true;
+                        variable.Follows = variable.Follows.Distinct().ToList();
                     }
                 }
             }
