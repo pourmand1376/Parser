@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Parser
@@ -84,12 +85,16 @@ namespace Parser
             }
         }
 
-        private void ll_1_Tab_Enter(object sender,EventArgs e)
+        private async void ll_1_Tab_Enter(object sender,EventArgs e)
         {
-            var leftToRightLookAhead1 = new LeftToRight_LookAhead_1(_grammarRules);
+            Progress<ParseReportModel> progress = new Progress<ParseReportModel>();
+            progress.ProgressChanged += Progress_ProgressChanged;
+
+            var leftToRightLookAhead1 = new LeftToRight_LookAhead_1(_grammarRules,progress);
             leftToRightLookAhead1.Init();
             RestartStopWatch();
-            var data = leftToRightLookAhead1.ProcessTable();
+
+            var data =await Task.Run(() => leftToRightLookAhead1.ProcessTable());
             _stopwatch.Stop();
             lblTime.Text = $"Creating LookAhead Table took {_stopwatch.ElapsedMilliseconds} ms.";
             dataGridViewLL_1.Columns.Clear();
@@ -130,9 +135,16 @@ namespace Parser
             }
             if(isValid)
                 MessageBox.Show(leftToRightLookAhead1
-                .ParseTheInput(
+                .Parse(
                     new LexicalAnalyzer(
                         File.ReadAllText(txtTestFile.Text)).TokenizeInputText()).ToString());
+        }
+
+        
+
+        private void Progress_ProgressChanged(object sender,ParseReportModel e)
+        {
+            dataGridViewReport.Rows.Add(e.Stack, e.InputString, e.Output);
         }
 
         private void RestartStopWatch()

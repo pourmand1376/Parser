@@ -46,12 +46,17 @@
             this.btnChooseTestFile = new System.Windows.Forms.Button();
             this.txtTestFile = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.dataGridViewReport = new System.Windows.Forms.DataGridView();
+            this.Stack = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InputText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPreprocess.SuspendLayout();
             this.ll_1_Tab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReport)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -104,7 +109,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 10);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(648, 374);
+            this.tabControl1.Size = new System.Drawing.Size(648, 461);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -114,7 +119,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(640, 348);
+            this.tabPage1.Size = new System.Drawing.Size(640, 435);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scanning Phase";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -124,7 +129,7 @@
             this.listBoxGrammar.FormattingEnabled = true;
             this.listBoxGrammar.Location = new System.Drawing.Point(6, 90);
             this.listBoxGrammar.Name = "listBoxGrammar";
-            this.listBoxGrammar.Size = new System.Drawing.Size(628, 251);
+            this.listBoxGrammar.Size = new System.Drawing.Size(628, 329);
             this.listBoxGrammar.TabIndex = 2;
             // 
             // tabPreprocess
@@ -136,7 +141,7 @@
             this.tabPreprocess.Location = new System.Drawing.Point(4, 22);
             this.tabPreprocess.Name = "tabPreprocess";
             this.tabPreprocess.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPreprocess.Size = new System.Drawing.Size(640, 348);
+            this.tabPreprocess.Size = new System.Drawing.Size(640, 435);
             this.tabPreprocess.TabIndex = 1;
             this.tabPreprocess.Text = "Preprocessing Phase";
             this.tabPreprocess.UseVisualStyleBackColor = true;
@@ -178,11 +183,12 @@
             // 
             // ll_1_Tab
             // 
+            this.ll_1_Tab.Controls.Add(this.dataGridViewReport);
             this.ll_1_Tab.Controls.Add(this.dataGridViewLL_1);
             this.ll_1_Tab.Location = new System.Drawing.Point(4, 22);
             this.ll_1_Tab.Name = "ll_1_Tab";
             this.ll_1_Tab.Padding = new System.Windows.Forms.Padding(3);
-            this.ll_1_Tab.Size = new System.Drawing.Size(640, 348);
+            this.ll_1_Tab.Size = new System.Drawing.Size(640, 435);
             this.ll_1_Tab.TabIndex = 2;
             this.ll_1_Tab.Text = "LL(1)";
             this.ll_1_Tab.UseVisualStyleBackColor = true;
@@ -197,13 +203,13 @@
             this.dataGridViewLL_1.Location = new System.Drawing.Point(6, 6);
             this.dataGridViewLL_1.Name = "dataGridViewLL_1";
             this.dataGridViewLL_1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridViewLL_1.Size = new System.Drawing.Size(628, 336);
+            this.dataGridViewLL_1.Size = new System.Drawing.Size(628, 170);
             this.dataGridViewLL_1.TabIndex = 1;
             // 
             // lblTime
             // 
             this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(19, 392);
+            this.lblTime.Location = new System.Drawing.Point(13, 474);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(35, 13);
             this.lblTime.TabIndex = 4;
@@ -236,12 +242,43 @@
             this.label4.TabIndex = 3;
             this.label4.Text = "Test File Path:";
             // 
+            // dataGridViewReport
+            // 
+            this.dataGridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Stack,
+            this.InputText,
+            this.Result});
+            this.dataGridViewReport.Location = new System.Drawing.Point(6, 182);
+            this.dataGridViewReport.Name = "dataGridViewReport";
+            this.dataGridViewReport.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridViewReport.Size = new System.Drawing.Size(628, 247);
+            this.dataGridViewReport.TabIndex = 2;
+            // 
+            // Stack
+            // 
+            this.Stack.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Stack.HeaderText = "Stack";
+            this.Stack.Name = "Stack";
+            // 
+            // InputText
+            // 
+            this.InputText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.InputText.HeaderText = "InputText";
+            this.InputText.Name = "InputText";
+            // 
+            // Result
+            // 
+            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Result.HeaderText = "Result";
+            this.Result.Name = "Result";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(672, 414);
+            this.ClientSize = new System.Drawing.Size(672, 496);
             this.Controls.Add(this.lblTime);
             this.Controls.Add(this.tabControl1);
             this.Name = "FrmMain";
@@ -255,6 +292,7 @@
             this.tabPreprocess.PerformLayout();
             this.ll_1_Tab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReport)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -280,6 +318,10 @@
         private System.Windows.Forms.Button btnChooseTestFile;
         private System.Windows.Forms.TextBox txtTestFile;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DataGridView dataGridViewReport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Stack;
+        private System.Windows.Forms.DataGridViewTextBoxColumn InputText;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
     }
 }
 

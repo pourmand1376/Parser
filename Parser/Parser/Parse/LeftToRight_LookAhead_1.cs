@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Parser.Lexical;
 using Parser.Models;
 
@@ -9,16 +11,20 @@ namespace Parser.Parse
     public class LeftToRight_LookAhead_1
     {
         private readonly GrammarRules _grammarRules;
+        private readonly IProgress<ParseReportModel> _progress;
         private List<ISymbol>[,] table;
+
 
         public Dictionary<string, int> MapVariableToNumber { get; set; }
         public Dictionary<string, int> MapTerminalToNumber { get; set; }
 
         public int VariableCount { get; set; }
         public int TerminalCount { get; set; }
-        public LeftToRight_LookAhead_1(GrammarRules grammarRules)
+        public LeftToRight_LookAhead_1(GrammarRules grammarRules,IProgress<ParseReportModel> progress)
         {
+            
             _grammarRules = grammarRules;
+            _progress = progress;
             MapTerminalToNumber = new Dictionary<string, int>();
             MapVariableToNumber = new Dictionary<string, int>();
         }
@@ -85,7 +91,7 @@ namespace Parser.Parse
             return table;
         }
 
-        public bool ParseTheInput(List<Terminal> terminals)
+        public bool Parse(List<Terminal> terminals)
         {
             terminals.Add(Terminal.EndOfFile);
             var terminalArray = terminals.ToArray();
@@ -93,9 +99,18 @@ namespace Parser.Parse
             stack.Push(Terminal.EndOfFile);
             stack.Push(_grammarRules.HeadVariable);
 
+            _progress.Report(new ParseReportModel()
+            {
+                InputString = string.Join<ISymbol>("",terminalArray),
+                Output = "Poping the stack",
+                Stack = string.Join("",stack.ToArray().Reverse()),
+            });
+
             int position = 0;
             while (stack.Count > 0 && position<terminalArray.Length)
             {
+                ParseReportModel parseReport = new ParseReportModel();
+                parseReport.InputString = string.Join("", terminalArray.Skip(position));
                 var current = terminalArray[position];
                 var popedValue=stack.Pop();
                 if (popedValue is Terminal terminal)
@@ -104,6 +119,7 @@ namespace Parser.Parse
                     {
                         if (current.Equals(Terminal.EndOfFile)) return true;
                         position++;
+                        parseReport.Output = $"Matched {current} Terminal";
                     }
                 }
                 else if (popedValue is Variable variable)
@@ -116,13 +132,18 @@ namespace Parser.Parse
                         {
                             reversed.Push(symbol);
                         }
+
+                        parseReport.Output ="Pushing "+ string.Join("",itemsToBepushed);
                         while(reversed.Count>0)
                             if (reversed.Peek().Equals(Terminal.Epsilon)) break;
                                 else stack.Push(reversed.Pop());
                     }
                 }
-            }
 
+                parseReport.Stack = string.Join("", stack.ToArray().Reverse());
+                _progress.Report(parseReport);
+            }
+            
             return false;
         }
         

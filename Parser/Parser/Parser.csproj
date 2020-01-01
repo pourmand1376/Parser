@@ -55,6 +55,7 @@
     <Compile Include="Models\GrammarRules.cs" />
     <Compile Include="Lexical\LexicalAnalyzer.cs" />
     <Compile Include="Models\ISymbol.cs" />
+    <Compile Include="Models\ParseReportModel.cs" />
     <Compile Include="Models\SymbolType.cs" />
     <Compile Include="Models\Terminal.cs" />
     <Compile Include="Models\Variable.cs" />
