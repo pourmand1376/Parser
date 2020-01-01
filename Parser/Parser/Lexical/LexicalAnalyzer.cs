@@ -10,79 +10,71 @@ using Parser.Models;
 namespace Parser
 {
     
-
     public class LexicalAnalyzer
     {
         // Variable -> ProducedRule 
         // Produced Rule is a list of variable or terminals
 
-        public GrammarADT GrammarAdt { get;  }
+        private readonly GrammarRules _grammarRules;
 
         public string Data { get; set; }
 
         public LexicalAnalyzer(string data)
         {
             Data = data;
-            GrammarAdt = new GrammarADT();
+            _grammarRules = new GrammarRules();
         }
 
-        public void Tokenize()
+        public GrammarRules Tokenize()
         {
             var lines = Data.Split('\n');
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if(!string.IsNullOrWhiteSpace(line))
                     LineTokenExtractor(line);                
             }
+
+            return _grammarRules;
         }
 
         private void LineTokenExtractor(string line)
         {
             Regex text = new Regex(@"<(?<variable>[\w-]+)>|""(?<terminal>[^""<>:]+)?""",RegexOptions.Compiled);
 
-            Variable head = new Variable();
-            RightHandSide rule = new RightHandSide(){SymbolList = new List<Symbol>()};
-
-            
             var matches=text.Matches(line);
-            
-            foreach (Match match in matches)
+            var firstVariable = matches[0].Groups["variable"];
+
+            if (!firstVariable.Success) return;
+            var headVariable=_grammarRules.GetOrCreateSymbol(firstVariable.Value, SymbolType.Variable);
+
+            var symbols = new List<ISymbol>();
+            for (var index = 1; index < matches.Count; index++)
             {
+                Match match = matches[index];
                 var variable = match.Groups["variable"];
                 if (variable.Success)
                 {
-                    if (head.Value==null) //first Variable
-                    {
-                        head.Value = variable.Value;
-                        //add list of production rules if there is more than one production rule
-                        if(!GrammarAdt.GrammerRules.ContainsKey(head)) 
-                            GrammarAdt.GrammerRules.Add(head,new List<RightHandSide>());
-                    }
-                    else
-                    {
-                        rule.SymbolList.Add(new Variable(variable.Value));
-                    }
+                    symbols.Add(_grammarRules.GetOrCreateSymbol(variable.Value,SymbolType.Variable));
                     continue;
                 }
+
                 var terminal = match.Groups["terminal"];
                 if (terminal.Success)
                 {
-                    rule.SymbolList.Add(new Terminal(terminal.Value));
+                    symbols.Add(_grammarRules.GetOrCreateSymbol(terminal.Value,SymbolType.Terminal));
                     continue;
                 }
 
                 //if it comes here then it's epsilon
-                rule.SymbolList.Add(new Terminal(ConstValues.Epsilon));
+                symbols.Add(_grammarRules.GetOrCreateSymbol("",SymbolType.Terminal));
             }
-            
 
-            if (GrammarAdt.HeadVariable == null)
+
+            if (_grammarRules.HeadVariable == null)
             {
-                GrammarAdt.HeadVariable = head;
+                _grammarRules.HeadVariable = (Variable)headVariable;
             }
-
-            var productionRules = GrammarAdt.GrammerRules[head];
-            productionRules.Add(rule);
+            ((Variable)headVariable).Definitions.Add(symbols);
         }
 
     }

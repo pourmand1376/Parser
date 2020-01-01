@@ -4,20 +4,21 @@ using System.Collections.Generic;
 
 namespace Parser.Parse
 {
+    
     public class Preprocessor
     {
 
-        private GrammarADT _grammarAdt { get; }
+        private GrammarRules GrammarRules { get; }
 
-        public Preprocessor(GrammarADT grammarAdt)
+        public Preprocessor(GrammarRules grammarRules)
         {
-            _grammarAdt = grammarAdt;
+            GrammarRules = grammarRules;
         }
 
-
-        public void FirstTerminals(Symbol symbol)
+        /*
+        public void FirstTerminals(ISymbol symbol)
         {
-            if ( _grammarAdt.FirstSet.ContainsKey(symbol) )
+            if ( GrammarRules.FirstSet.ContainsKey(symbol) )
             {
                 return;
             }
@@ -25,19 +26,19 @@ namespace Parser.Parse
             if ( symbol.SymbolType == SymbolType.Terminal )
             {
                 firstSet.Add(symbol.GetTerminal());
-                _grammarAdt.FirstSet.Add(symbol,firstSet);
+                GrammarRules.FirstSet.Add(symbol,firstSet);
                 return;
             }
 
             var baseVariable = symbol.GetVariable();
-            if ( _grammarAdt.HasEmptyRule(baseVariable) )
+            if ( GrammarRules.HasEmptyRule(baseVariable) )
             {
                 firstSet.Add(new Terminal(ConstValues.Epsilon));
             }
             //submit to dictionary till now
-            _grammarAdt.FirstSet.Add(symbol,firstSet);
+            GrammarRules.FirstSet.Add(symbol,firstSet);
 
-            var grammars = _grammarAdt.GrammerRules [baseVariable];
+            var grammars = GrammarRules.GrammerRules [baseVariable];
 
             foreach ( RightHandSide rightHandSide in grammars )
             {
@@ -46,7 +47,7 @@ namespace Parser.Parse
                     var rightHandSideValue = rightHandSide.SymbolList [i];
                     if ( rightHandSideValue.SymbolType == SymbolType.Terminal )
                     {
-                        _grammarAdt.FirstSet [symbol].Add(rightHandSideValue.GetTerminal());
+                        GrammarRules.FirstSet [symbol].Add(rightHandSideValue.GetTerminal());
                         break;
                     }
 
@@ -54,14 +55,14 @@ namespace Parser.Parse
                     //Calculate First Terminal
                     FirstTerminals(variable);
 
-                    Terminal [] terminals = new Terminal [_grammarAdt.FirstSet [variable].Count];
-                    _grammarAdt.FirstSet [variable].CopyTo(terminals);
+                    Terminal [] terminals = new Terminal [GrammarRules.FirstSet [variable].Count];
+                    GrammarRules.FirstSet [variable].CopyTo(terminals);
                     foreach ( Terminal terminalOfVariable in terminals )
                     {
-                        _grammarAdt.FirstSet [symbol].Add(terminalOfVariable);
+                        GrammarRules.FirstSet [symbol].Add(terminalOfVariable);
                     }
 
-                    if ( !_grammarAdt.HasEmptyRule(variable) )
+                    if ( !GrammarRules.HasEmptyRule(variable) )
                     {
                         break;
                     }
@@ -70,18 +71,18 @@ namespace Parser.Parse
 
         }
 
-        public void FollowTerminals(Symbol symbol)
+        public void FollowTerminals(ISymbol symbol)
         {
             var hashSet = new HashSet<Terminal>();
-            _grammarAdt.FollowSet.Add(symbol,hashSet);
-            foreach ( KeyValuePair<Variable,List<RightHandSide>> grammarAdtGrammerRule in _grammarAdt.GrammerRules )
+            GrammarRules.FollowSet.Add(symbol,hashSet);
+            foreach ( KeyValuePair<Variable,List<RightHandSide>> grammarAdtGrammerRule in GrammarRules.GrammerRules )
             {
                 foreach ( RightHandSide rightHandSide in grammarAdtGrammerRule.Value )
                 {
                     bool found = false;
                     for (var index = 0; index < rightHandSide.SymbolList.Count; index++)
                     {
-                        Symbol currentSymbol = rightHandSide.SymbolList[index];
+                        ISymbol currentSymbol = rightHandSide.SymbolList[index];
                         if (found)
                         {
                             if (symbol.SymbolType == SymbolType.Terminal)
@@ -90,12 +91,12 @@ namespace Parser.Parse
                                 break;
                             }
 
-                            foreach (Terminal terminal in _grammarAdt.FirstSet[currentSymbol])
+                            foreach (Terminal terminal in GrammarRules.FirstSet[currentSymbol])
                             {
                                 hashSet.Add(terminal);
                             }
 
-                            if (!_grammarAdt.FirstSet[currentSymbol].Contains(new Terminal(ConstValues.Epsilon))) break;
+                            if (!GrammarRules.FirstSet[currentSymbol].Contains(new Terminal(ConstValues.Epsilon))) break;
                         }
                         else if (currentSymbol == symbol)
                         {
@@ -107,7 +108,7 @@ namespace Parser.Parse
                         if (found && index + 1 >= rightHandSide.SymbolList.Count)
                         {
                             FollowTerminals(grammarAdtGrammerRule.Key);
-                            foreach (Terminal terminal in _grammarAdt.FollowSet[grammarAdtGrammerRule.Key])
+                            foreach (Terminal terminal in GrammarRules.FollowSet[grammarAdtGrammerRule.Key])
                             {
                                 hashSet.Add(terminal);
                             }
@@ -117,6 +118,6 @@ namespace Parser.Parse
                     }
                 }
             }
-        }
+        }*/
     }
 }

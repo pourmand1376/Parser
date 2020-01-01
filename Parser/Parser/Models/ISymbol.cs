@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Parser
+namespace Parser.Models
 {
-    public static class ConstValues
+    public interface ISymbol
     {
-        public const string Epsilon = "ε";
+        SymbolType SymbolType { get;}
+        string Value { get; }
     }
 }

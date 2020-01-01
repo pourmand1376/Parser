@@ -1,14 +1,33 @@
-﻿namespace Parser.Models
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Parser.Models
 {
-    public class Variable:Symbol
+    public class Variable:ISymbol
     {
-        public Variable()
+        public SymbolType SymbolType { get; }
+
+        public string Value { get; }
+
+        public List<IEnumerable<ISymbol>> Definitions { get; set; }
+
+        public Variable(string value)
         {
             SymbolType = SymbolType.Variable;
-        }
-        public Variable(string value):this()
-        {
             Value = value;
+            Definitions = new List<IEnumerable<ISymbol>>();
+        }
+
+        public string ShowRules()
+        {
+            return $"{Value} ==> " +
+                   string.Join(" | ", (
+                       from ruleSet in Definitions
+                       select string.Join("",ruleSet)));
+        }
+        public override string ToString()
+        {
+            return $" <{Value}> ";
         }
 
         public override bool Equals(object obj)
@@ -30,5 +49,7 @@
         {
             return Value.GetHashCode();
         }
+
+        
     }
 }

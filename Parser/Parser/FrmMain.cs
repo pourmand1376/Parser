@@ -13,7 +13,7 @@ namespace Parser
     {
 
 
-        private GrammarADT _grammarAdt;
+        private GrammarRules _grammarRules;
 
         public FrmMain()
         {
@@ -38,53 +38,44 @@ namespace Parser
 
         }
 
-        private void button1_Click(object sender,EventArgs e)
+        private void btnParseGrammar_Click(object sender,EventArgs e)
         {
             listBoxGrammar.Items.Clear();
             listBoxFirst.Items.Clear();
             var text = File.ReadAllText(textBox1.Text);
             LexicalAnalyzer lex = new LexicalAnalyzer(text);
-            lex.Tokenize();
-            _grammarAdt = lex.GrammarAdt;
-
-
-            foreach ( KeyValuePair<Variable,List<RightHandSide>> grammarAdtGrammerRule in lex.GrammarAdt.GrammerRules)
+            _grammarRules = lex.Tokenize();
+            
+            foreach ( ISymbol symbol in _grammarRules.Symbols.Values)
             {
-                foreach ( var item in grammarAdtGrammerRule.Value )
-                {
-                    StringBuilder sb = new StringBuilder();
-                    foreach ( Symbol symbol in item.SymbolList )
-                    {
-                        sb.Append(symbol.Value);
-                    }
-                    listBoxGrammar.Items.Add(grammarAdtGrammerRule.Key.Value + " ::= " + sb);
-                }
+                if(symbol.SymbolType==SymbolType.Variable)
+                    listBoxGrammar.Items.Add(((Variable)symbol).ShowRules());
             }
         }
 
         private void btnPreprocess_Click(object sender,EventArgs e)
         {
             listBoxFirst.Items.Clear();
-            Preprocessor preprocessor = new Preprocessor(_grammarAdt);
-            foreach ( Variable grammerRulesKey in _grammarAdt.GrammerRules.Keys )
-            {
-                preprocessor.FirstTerminals(grammerRulesKey);
-            }
-
-            foreach ( Variable grammerRulesKey in _grammarAdt.GrammerRules.Keys )
-            {
-                preprocessor.FollowTerminals(grammerRulesKey);
-            }
-
-            foreach ( KeyValuePair<Symbol,HashSet<Terminal>> keyValuePair in _grammarAdt.FirstSet )
-            {
-                listBoxFirst.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
-            }
-
-            foreach (KeyValuePair<Symbol, HashSet<Terminal>> keyValuePair in _grammarAdt.FollowSet) 
-            {
-                listBoxFollow.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
-            }
+//            Preprocessor preprocessor = new Preprocessor(_grammarRules);
+//            foreach ( Variable grammerRulesKey in _grammarRules.GrammerRules.Keys )
+//            {
+//                preprocessor.FirstTerminals(grammerRulesKey);
+//            }
+//
+//            foreach ( Variable grammerRulesKey in _grammarRules.GrammerRules.Keys )
+//            {
+//                preprocessor.FollowTerminals(grammerRulesKey);
+//            }
+//
+//            foreach ( KeyValuePair<ISymbol,HashSet<Terminal>> keyValuePair in _grammarRules.FirstSet )
+//            {
+//                listBoxFirst.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
+//            }
+//
+//            foreach (KeyValuePair<ISymbol, HashSet<Terminal>> keyValuePair in _grammarRules.FollowSet) 
+//            {
+//                listBoxFollow.Items.Add(keyValuePair.Key + ":{ " + string.Join(",",keyValuePair.Value) + "}");
+//            }
         }
 
         private void FrmMain_Load(object sender,EventArgs e)

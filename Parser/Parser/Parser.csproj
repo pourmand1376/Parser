@@ -46,17 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConstValues.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="GrammarADT.cs" />
+    <Compile Include="Models\GrammarRules.cs" />
     <Compile Include="Lexical\LexicalAnalyzer.cs" />
-    <Compile Include="Models\Symbol.cs" />
-    <Compile Include="Models\RightHandSide.cs" />
+    <Compile Include="Models\ISymbol.cs" />
     <Compile Include="Models\SymbolType.cs" />
     <Compile Include="Models\Terminal.cs" />
     <Compile Include="Models\Variable.cs" />
