@@ -15,7 +15,7 @@ namespace Parser.Models
         public List<Terminal> Follows { get; set; }
 
         public bool IsCalculatingFirst { get; set; }
-
+        public bool IsCalculatingFollow { get; set; }
         
         public bool FirstReady { get; set; }
         //Can't check if follow is null because $ should be added first
@@ -28,6 +28,8 @@ namespace Parser.Models
             Definitions = new List<IEnumerable<ISymbol>>();
             Firsts = new List<Terminal>();
             Follows = new List<Terminal>();
+            FirstReady = false;
+            FollowReady = false;
         }
 
         public string ShowRules()

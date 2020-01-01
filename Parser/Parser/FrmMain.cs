@@ -60,7 +60,7 @@ namespace Parser
 
             Preprocessor preprocessor = new Preprocessor(_grammarRules);
             preprocessor.CalculateAllFirsts();
-            preprocessor.CalculateFollowSets();
+            preprocessor.CalculateAllFollows();
 
             foreach (ISymbol symbol in _grammarRules.Symbols.Values)
             {

@@ -16,132 +16,156 @@ namespace Parser.Parse
 
         public void CalculateAllFirsts()
         {
-            foreach (ISymbol symbolsValue in GrammarRules.Symbols.Values)
+            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
             {
-                if (symbolsValue is Variable variable)
+                if ( symbolsValue is Variable variable )
                 {
-                    if (variable.Firsts.Count==0)
+                    if ( !variable.FirstReady )
                     {
                         variable.IsCalculatingFirst = true;
-                        variable.Firsts = (List<Terminal>) FirstSet(variable.Definitions);
+                        variable.Firsts.AddRange(FirstSet(variable.Definitions));
                         variable.IsCalculatingFirst = false;
+                        variable.FirstReady = true;
                     }
 
                 }
             }
         }
 
-        public void CalculateFollowSets()
+        public void CalculateAllFollows()
         {
-            foreach (ISymbol symbolsValue in GrammarRules.Symbols.Values)
+            GrammarRules.HeadVariable.Follows.Add(Terminal.EndOfFile);
+            CalculateFollowSets();
+            ClearAllFollowReady();
+            CalculateFollowSets();
+        }
+
+        private void ClearAllFollowReady()
+        {
+            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
             {
-                if (symbolsValue is Variable variable)
+                if ( symbolsValue is Variable variable )
+                { 
+                    variable.FollowReady = false;   
+                }
+            }
+        }
+        private void CalculateFollowSets()
+        {
+            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
+            {
+                if ( symbolsValue is Variable variable )
                 {
-                    if (variable.Follows.Count==0)
+                    if ( !variable.FollowReady )
                     {
-                        variable.Follows = (List<Terminal>) FollowSets(variable);
+                        variable.Follows.AddRange(FollowSets(variable));
+                        variable.FollowReady = true;
                     }
                 }
             }
         }
 
-        private IEnumerable<Terminal> FirstSet(List<IEnumerable<ISymbol>> rules)
+        private List<Terminal> FirstSet(List<IEnumerable<ISymbol>> rules)
         {
             return rules.SelectMany(rule =>
                 {
                     var terminals = new List<Terminal>();
                     bool canBeEmpty = true;
-                    foreach (ISymbol symbol in rule)
+                    foreach ( ISymbol symbol in rule )
                     {
-                        if (symbol is Terminal terminal && 
-                            !symbol.Equals(Terminal.Epsilon))
+                        if ( symbol is Terminal terminal &&
+                            !symbol.Equals(Terminal.Epsilon) )
                         {
-                            terminals.Add((Terminal)GrammarRules.Symbols[terminal.Value]);
+                            terminals.Add((Terminal) GrammarRules.Symbols [terminal.Value]);
                             canBeEmpty = false;
                             break;
                         }
 
-                        if (symbol is Variable variable)
+                        if ( symbol is Variable variable )
                         {
                             //preventing the stackoverflow exception
-                            if (variable.IsCalculatingFirst)
+                            if ( variable.IsCalculatingFirst )
                                 return new List<Terminal>();
 
-                            if (variable.Firsts == null)
+                            if ( !variable.FirstReady )
                             {
                                 variable.IsCalculatingFirst = true;
                                 var first = FirstSet(variable.Definitions);
                                 variable.IsCalculatingFirst = false;
-                                variable.Firsts = (List<Terminal>) first;
+                                variable.Firsts.AddRange(first);
+                                variable.FirstReady = true;
                             }
 
                             var firsts = variable.Firsts;
-                            
-                            if (!firsts.Contains(Terminal.Epsilon))
+
+                            if ( !firsts.Contains(Terminal.Epsilon) )
                             {
                                 canBeEmpty = false;
                                 terminals.AddRange(firsts);
                                 break;
                             }
-                            else 
+                            else
                                 terminals.AddRange(firsts
-                                    .Where(term=>!term.Equals(Terminal.Epsilon)));
+                                    .Where(term => !term.Equals(Terminal.Epsilon)));
                         }
                     }
-                    if(canBeEmpty) terminals.Add(Terminal.Epsilon);
+                    if ( canBeEmpty ) terminals.Add(Terminal.Epsilon);
                     return terminals;
                 })
                 .Distinct().ToList();
         }
 
-        public IEnumerable<Terminal> FollowSets(Variable variable)
+        public List<Terminal> FollowSets(Variable variable)
         {
-//            if (variable.IsCalculating)
-//                return new List<Terminal>();
-//            variable.IsCalculating = true;
-            var result= GrammarRules.Symbols.Values.SelectMany(symbol =>
-            {
-                if (!(symbol is Variable currentVar)) return new List<Terminal>();
-                List<Terminal> follow = new List<Terminal>();
-                foreach (IEnumerable<ISymbol> currentRule in currentVar.Definitions
-                    .Where(rule => rule.Contains(variable)))
-                {
-                    
-                    var tempCurrentRule = currentRule;
+            if (variable.IsCalculatingFollow)
+                return variable.Follows;
 
-                    while (tempCurrentRule.Contains(variable))
-                    {
-                        tempCurrentRule = tempCurrentRule.SkipWhile(s => !s.Equals(variable)).Skip(1);
-                        if (tempCurrentRule.Any())
-                        {
-                            var firsts = FirstSet(new List<IEnumerable<ISymbol>>() {tempCurrentRule});
-                            follow.AddRange(firsts.Where(t => !t.Equals(Terminal.Epsilon)));
-                            if (firsts.Contains(Terminal.Epsilon))
-                            {
-                                if (currentVar.Follows == null)
-                                {
-                                    var follows = FollowSets(currentVar);
-                                    currentVar.Follows = (List<Terminal>) follows;
-                                }
+            variable.IsCalculatingFollow = true;
+            var result = GrammarRules.Symbols.Values.SelectMany(symbol =>
+             {
+                 if ( !( symbol is Variable currentVar ) ) return new List<Terminal>();
+                 List<Terminal> follow = new List<Terminal>();
+                 foreach ( IEnumerable<ISymbol> currentRule in currentVar.Definitions
+                     .Where(rule => rule.Contains(variable)) )
+                 {
 
-                                follow.AddRange(currentVar.Follows);
-                            }
-                        }
-                        else if (!currentVar.Equals(variable))
-                        {
-                            if (currentVar.Follows == null)
-                            {
-                                var follows = FollowSets(currentVar);
-                                currentVar.Follows = (List<Terminal>) follows;
-                            }
+                     var tempCurrentRule = currentRule;
 
-                            follow.AddRange(currentVar.Follows);
-                        }
-                    }
-                }
-                return follow;
-            }).Distinct().ToList();
-            //variable.IsCalculating = false;
+                     while ( tempCurrentRule.Contains(variable) )
+                     {
+                         tempCurrentRule = tempCurrentRule.SkipWhile(s => !s.Equals(variable)).Skip(1);
+                         if ( tempCurrentRule.Any() )
+                         {
+                             var firsts = FirstSet(new List<IEnumerable<ISymbol>>() { tempCurrentRule });
+                             follow.AddRange(firsts.Where(t => !t.Equals(Terminal.Epsilon)));
+                             if ( firsts.Contains(Terminal.Epsilon) )
+                             {
+                                 if ( !currentVar.FollowReady )
+                                 {
+                                     var follows = FollowSets(currentVar);
+                                     currentVar.Follows.AddRange(follows);
+                                     currentVar.FollowReady = true;
+                                 }
+
+                                 follow.AddRange(currentVar.Follows);
+                             }
+                         }
+                         else if ( !currentVar.Equals(variable) )
+                         {
+                             if ( !currentVar.FollowReady )
+                             {
+                                 var follows = FollowSets(currentVar);
+                                 currentVar.Follows.AddRange(follows);
+                                 currentVar.FollowReady = true;
+                             }
+
+                             follow.AddRange(currentVar.Follows);
+                         }
+                     }
+                 }
+                 return follow;
+             }).Distinct().ToList();
+            variable.IsCalculatingFollow = false;
             return result;
         }
     }
