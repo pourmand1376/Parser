@@ -32,7 +32,6 @@
             this.btnChooseFile = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.listBoxGrammar = new System.Windows.Forms.ListBox();
@@ -42,6 +41,8 @@
             this.listBoxFollow = new System.Windows.Forms.ListBox();
             this.listBoxFirst = new System.Windows.Forms.ListBox();
             this.btnPreprocess = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.lblTime = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -87,20 +88,11 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "File Path:";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 67);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(135, 37);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Scan the Grammar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btnParseGrammar_Click);
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(12, 10);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -111,7 +103,6 @@
             // 
             this.tabPage1.Controls.Add(this.listBoxGrammar);
             this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -123,9 +114,9 @@
             // listBoxGrammar
             // 
             this.listBoxGrammar.FormattingEnabled = true;
-            this.listBoxGrammar.Location = new System.Drawing.Point(6, 116);
+            this.listBoxGrammar.Location = new System.Drawing.Point(6, 64);
             this.listBoxGrammar.Name = "listBoxGrammar";
-            this.listBoxGrammar.Size = new System.Drawing.Size(628, 225);
+            this.listBoxGrammar.Size = new System.Drawing.Size(628, 277);
             this.listBoxGrammar.TabIndex = 2;
             // 
             // tabPage2
@@ -179,7 +170,7 @@
             // 
             // btnPreprocess
             // 
-            this.btnPreprocess.Location = new System.Drawing.Point(260, 6);
+            this.btnPreprocess.Location = new System.Drawing.Point(256, 6);
             this.btnPreprocess.Name = "btnPreprocess";
             this.btnPreprocess.Size = new System.Drawing.Size(135, 37);
             this.btnPreprocess.TabIndex = 2;
@@ -187,12 +178,32 @@
             this.btnPreprocess.UseVisualStyleBackColor = true;
             this.btnPreprocess.Click += new System.EventHandler(this.btnPreprocess_Click);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(640, 348);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "LL(1)";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(19, 392);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(35, 13);
+            this.lblTime.TabIndex = 4;
+            this.lblTime.Text = "label4";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(672, 396);
+            this.ClientSize = new System.Drawing.Size(672, 414);
+            this.Controls.Add(this.lblTime);
             this.Controls.Add(this.tabControl1);
             this.Name = "FrmMain";
             this.Text = "Configure";
@@ -204,6 +215,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -213,7 +225,6 @@
         private System.Windows.Forms.Button btnChooseFile;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -223,6 +234,8 @@
         private System.Windows.Forms.ListBox listBoxFirst;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox listBoxFollow;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Label lblTime;
     }
 }
 

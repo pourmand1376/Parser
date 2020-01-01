@@ -3,6 +3,7 @@ using Parser.Models;
 using Parser.Parse;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -35,7 +36,7 @@ namespace Parser
 
             openFile.ShowDialog();
             textBox1.Text = openFile.FileName;
-
+            btnParseGrammar_Click(null,null);
         }
 
         private void btnParseGrammar_Click(object sender,EventArgs e)
@@ -44,8 +45,11 @@ namespace Parser
             listBoxFirst.Items.Clear();
             var text = File.ReadAllText(textBox1.Text);
             LexicalAnalyzer lex = new LexicalAnalyzer(text);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             _grammarRules = lex.Tokenize();
-            
+            stopwatch.Stop();
+            lblTime.Text = $"Tokenizing process took {stopwatch.ElapsedMilliseconds} ms.";
             foreach ( ISymbol symbol in _grammarRules.Symbols.Values)
             {
                 if(symbol.SymbolType==SymbolType.Variable)

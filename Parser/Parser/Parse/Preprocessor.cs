@@ -87,8 +87,9 @@ namespace Parser.Parse
                     bool canBeEmpty = true;
                     foreach ( ISymbol symbol in rule )
                     {
-                        if ( symbol is Terminal terminal &&
-                            !symbol.Equals(Terminal.Epsilon) )
+                        if ( symbol is Terminal terminal 
+                             && !symbol.Equals(Terminal.Epsilon)
+                             )
                         {
                             terminals.Add((Terminal) GrammarRules.Symbols [terminal.Value]);
                             canBeEmpty = false;
@@ -118,7 +119,7 @@ namespace Parser.Parse
                                 terminals.AddRange(firsts);
                                 break;
                             }
-                            else
+                            //else
                                 terminals.AddRange(firsts
                                     .Where(term => !term.Equals(Terminal.Epsilon)));
                         }
@@ -132,7 +133,7 @@ namespace Parser.Parse
 
         public List<Terminal> FollowSets(Variable variable)
         {
-            //preventing stackoverflow exceptions
+            //preventing stackoverflow exception
             if (variable.IsCalculatingFollow)
                 return variable.Follows;
 
