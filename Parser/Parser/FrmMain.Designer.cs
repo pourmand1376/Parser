@@ -42,11 +42,15 @@
             this.listBoxFirst = new System.Windows.Forms.ListBox();
             this.btnPreprocess = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.dataGridViewLL_1 = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
             this.lblTime = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -180,6 +184,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.dataGridViewLL_1);
+            this.tabPage3.Controls.Add(this.button1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -187,6 +193,28 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "LL(1)";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewLL_1
+            // 
+            this.dataGridViewLL_1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewLL_1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewLL_1.Location = new System.Drawing.Point(6, 45);
+            this.dataGridViewLL_1.Name = "dataGridViewLL_1";
+            this.dataGridViewLL_1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridViewLL_1.Size = new System.Drawing.Size(628, 297);
+            this.dataGridViewLL_1.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(262, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(99, 35);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Fill Table";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.FillLL_1_Click);
             // 
             // lblTime
             // 
@@ -214,6 +242,8 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,6 +266,8 @@
         private System.Windows.Forms.ListBox listBoxFollow;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridView dataGridViewLL_1;
     }
 }
 

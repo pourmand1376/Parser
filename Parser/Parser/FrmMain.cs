@@ -79,5 +79,34 @@ namespace Parser
         private void FrmMain_Load(object sender,EventArgs e)
         {
         }
+
+        private void FillLL_1_Click(object sender,EventArgs e)
+        {
+            var leftToRightLookAhead1 = new LeftToRight_LookAhead_1(_grammarRules);
+            leftToRightLookAhead1.Init();
+            var data=leftToRightLookAhead1.ProcessTable();
+
+            foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapTerminalToNumber)
+            {
+                dataGridViewLL_1.Columns.Add(keyValuePair.Key, keyValuePair.Key);
+            }
+
+            foreach (var keyValue in leftToRightLookAhead1.MapVariableToNumber)
+            {
+                dataGridViewLL_1.Rows.Add(new DataGridViewRow()
+                {
+                    HeaderCell = {Value = keyValue.Key},
+                });
+            }
+
+            for (var i = 0; i < leftToRightLookAhead1.VariableCount; i++)
+            {
+                for (var j = 0; j < leftToRightLookAhead1.TerminalCount; j++)
+                {
+                    if(data[i,j]!=null)
+                    dataGridViewLL_1.Rows[i].Cells[j].Value = string.Join("",data[i, j]);
+                }
+            }
+        }
     }
 }

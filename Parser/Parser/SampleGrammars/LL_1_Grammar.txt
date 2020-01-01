@@ -1,0 +1,12 @@
+<E>::= <T><EPrim>
+
+<EPrim>::="+"<T><EPrim>
+<EPrim>::=""
+
+<T>::=<F><TPrim>
+
+<TPrim>::="*"<F><TPrim>
+<TPrim>::=""
+
+<F>::="("<E>")"
+<F>::"id"

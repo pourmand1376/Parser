@@ -79,7 +79,7 @@ namespace Parser.Parse
             }
         }
 
-        private List<Terminal> FirstSet(List<IEnumerable<ISymbol>> rules)
+        public List<Terminal> FirstSet(List<IEnumerable<ISymbol>> rules)
         {
             return rules.SelectMany(rule =>
                 {

@@ -34,7 +34,7 @@ namespace Parser.Models
 
         public string ShowRules()
         {
-            return $"{Value} ==> " +
+            return $"{this} ==> " +
                    string.Join(" | ", (
                        from ruleSet in Definitions
                        select string.Join("",ruleSet)));
@@ -42,12 +42,12 @@ namespace Parser.Models
 
         public string ShowFirsts()
         {
-            return $"{Value} ==> " + string.Join(", ", Firsts);
+            return $"{this} ==> " + string.Join(", ", Firsts);
         }
 
         public string ShowFollows()
         {
-            return $"{Value} ==> " + string.Join(", ", Follows);
+            return $"{this} ==> " + string.Join(", ", Follows);
         }
 
         public override string ToString()
