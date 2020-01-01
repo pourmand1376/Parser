@@ -4,16 +4,15 @@ using Parser.Parse;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Parser
 {
     public partial class FrmMain :Form
     {
-
-
+        private readonly Stopwatch _stopwatch = new Stopwatch();
         private GrammarRules _grammarRules;
 
         public FrmMain()
@@ -23,6 +22,12 @@ namespace Parser
 
         private void btnChooseFile_Click(object sender,EventArgs e)
         {
+            ChooseFile(txtgrammarFile);
+            btnParseGrammar_Click(null,null);
+        }
+
+        private void ChooseFile(TextBox textbox)
+        {
             OpenFileDialog openFile = new OpenFileDialog()
             {
                 CheckFileExists = true,
@@ -31,48 +36,26 @@ namespace Parser
                 CheckPathExists = true,
                 DefaultExt = "txt",
                 InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
-
             };
 
             openFile.ShowDialog();
-            textBox1.Text = openFile.FileName;
-            btnParseGrammar_Click(null,null);
+            textbox.Text = openFile.FileName;
         }
 
         private void btnParseGrammar_Click(object sender,EventArgs e)
         {
             listBoxGrammar.Items.Clear();
             listBoxFirst.Items.Clear();
-            var text = File.ReadAllText(textBox1.Text);
+            var text = File.ReadAllText(txtgrammarFile.Text);
             LexicalAnalyzer lex = new LexicalAnalyzer(text);
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            _grammarRules = lex.Tokenize();
-            stopwatch.Stop();
-            lblTime.Text = $"Tokenizing process took {stopwatch.ElapsedMilliseconds} ms.";
-            foreach ( ISymbol symbol in _grammarRules.Symbols.Values)
+            RestartStopWatch();
+            _grammarRules = lex.TokenizeGrammar();
+            _stopwatch.Stop();
+            lblTime.Text = $"Tokenizing process took {_stopwatch.ElapsedMilliseconds} ms.";
+            foreach ( ISymbol symbol in _grammarRules.Symbols.Values )
             {
-                if(symbol.SymbolType==SymbolType.Variable)
-                    listBoxGrammar.Items.Add(((Variable)symbol).ShowRules());
-            }
-        }
-
-        private void btnPreprocess_Click(object sender,EventArgs e)
-        {
-            listBoxFirst.Items.Clear();
-            listBoxFollow.Items.Clear();
-
-            Preprocessor preprocessor = new Preprocessor(_grammarRules);
-            preprocessor.CalculateAllFirsts();
-            preprocessor.CalculateAllFollows();
-
-            foreach (ISymbol symbol in _grammarRules.Symbols.Values)
-            {
-                if (symbol is Variable variable)
-                {
-                    listBoxFirst.Items.Add(variable.ShowFirsts());
-                    listBoxFollow.Items.Add(variable.ShowFollows());
-                }
+                if ( symbol.SymbolType == SymbolType.Variable )
+                    listBoxGrammar.Items.Add(( (Variable) symbol ).ShowRules());
             }
         }
 
@@ -80,33 +63,88 @@ namespace Parser
         {
         }
 
-        private void FillLL_1_Click(object sender,EventArgs e)
+        private void TabPreprocess_Enter(object sender,EventArgs e)
+        {
+            listBoxFirst.Items.Clear();
+            listBoxFollow.Items.Clear();
+
+            Preprocessor preprocessor = new Preprocessor(_grammarRules);
+            RestartStopWatch();
+            preprocessor.CalculateAllFirsts();
+            preprocessor.CalculateAllFollows();
+            _stopwatch.Stop();
+            lblTime.Text = $"First and follow calculation took {_stopwatch.ElapsedMilliseconds} ms.";
+            foreach ( ISymbol symbol in _grammarRules.Symbols.Values )
+            {
+                if ( symbol is Variable variable )
+                {
+                    listBoxFirst.Items.Add(variable.ShowFirsts());
+                    listBoxFollow.Items.Add(variable.ShowFollows());
+                }
+            }
+        }
+
+        private void ll_1_Tab_Enter(object sender,EventArgs e)
         {
             var leftToRightLookAhead1 = new LeftToRight_LookAhead_1(_grammarRules);
             leftToRightLookAhead1.Init();
-            var data=leftToRightLookAhead1.ProcessTable();
-
-            foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapTerminalToNumber)
+            RestartStopWatch();
+            var data = leftToRightLookAhead1.ProcessTable();
+            _stopwatch.Stop();
+            lblTime.Text = $"Creating LookAhead Table took {_stopwatch.ElapsedMilliseconds} ms.";
+            dataGridViewLL_1.Columns.Clear();
+            dataGridViewLL_1.Rows.Clear();
+            foreach ( KeyValuePair<string,int> keyValuePair in leftToRightLookAhead1.MapTerminalToNumber )
             {
-                dataGridViewLL_1.Columns.Add(keyValuePair.Key, keyValuePair.Key);
+                dataGridViewLL_1.Columns.Add(keyValuePair.Key,keyValuePair.Key);
             }
 
-            foreach (var keyValue in leftToRightLookAhead1.MapVariableToNumber)
+            foreach ( var keyValue in leftToRightLookAhead1.MapVariableToNumber )
             {
                 dataGridViewLL_1.Rows.Add(new DataGridViewRow()
                 {
-                    HeaderCell = {Value = keyValue.Key},
+                    HeaderCell = { Value = keyValue.Key },
                 });
             }
 
-            for (var i = 0; i < leftToRightLookAhead1.VariableCount; i++)
+            bool isValid = true;
+            for ( var i = 0 ;i < leftToRightLookAhead1.VariableCount ;i++ )
             {
-                for (var j = 0; j < leftToRightLookAhead1.TerminalCount; j++)
+                for ( var j = 0 ;j < leftToRightLookAhead1.TerminalCount ;j++ )
                 {
-                    if(data[i,j]!=null)
-                    dataGridViewLL_1.Rows[i].Cells[j].Value = string.Join("",data[i, j]);
+                    if ( data [i,j] != null )
+                    {
+                        dataGridViewLL_1.Rows [i].Cells [j].Value = string.Join("",data [i,j]);
+                        if ( data [i,j].Contains(Terminal.Error) )
+                        {
+                            dataGridViewLL_1.Rows[i].Cells[j].Style.BackColor = Color.Orange;
+                            isValid = false;
+                        }
+                        else
+                        {
+                            dataGridViewLL_1.Rows[i].Cells[j].Style.BackColor = Color.LightGreen;
+                        }
+
+                    }
                 }
             }
+            if(isValid)
+                MessageBox.Show(leftToRightLookAhead1
+                .ParseTheInput(
+                    new LexicalAnalyzer(
+                        File.ReadAllText(txtTestFile.Text)).TokenizeInputText()).ToString());
+        }
+
+        private void RestartStopWatch()
+        {
+            _stopwatch.Stop();
+            _stopwatch.Reset();
+            _stopwatch.Start();
+        }
+
+        private void btnChooseTestFile_Click(object sender,EventArgs e)
+        {
+            ChooseFile(txtTestFile);
         }
     }
 }

@@ -9,6 +9,8 @@ namespace Parser.Models
 
         public static Terminal Epsilon { get; }= new Terminal("ε");
 
+        public static Terminal Error { get; } = new Terminal("ERR");
+
         public SymbolType SymbolType { get; }
 
         public string Value { get; }

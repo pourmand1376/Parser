@@ -9,7 +9,7 @@ namespace Parser.Parse
     public class LeftToRight_LookAhead_1
     {
         private readonly GrammarRules _grammarRules;
-        private IEnumerable<ISymbol>[,] table;
+        private List<ISymbol>[,] table;
 
         public Dictionary<string, int> MapVariableToNumber { get; set; }
         public Dictionary<string, int> MapTerminalToNumber { get; set; }
@@ -25,8 +25,8 @@ namespace Parser.Parse
 
         public void Init()
         {
-             VariableCount = 0;
-             TerminalCount = 0;
+            VariableCount = 0;
+            TerminalCount = 0;
             foreach (var symbol in _grammarRules.Symbols.Values
                 .Where(symbol => !symbol.Equals(Terminal.Epsilon) && 
                                  !symbol.Equals(Terminal.EndOfFile)))
@@ -36,7 +36,6 @@ namespace Parser.Parse
                     MapVariableToNumber.Add(symbol.Value,VariableCount);
                     VariableCount++;
                 }
-
                 else
                 {
                     MapTerminalToNumber.Add(symbol.Value,TerminalCount);
@@ -44,10 +43,10 @@ namespace Parser.Parse
                 }
             }
             MapTerminalToNumber.Add(Terminal.EndOfFile.Value,TerminalCount++);
-            table = new IEnumerable<ISymbol>[VariableCount,TerminalCount];
+            table = new List<ISymbol>[VariableCount,TerminalCount];
         }
 
-        public IEnumerable<ISymbol>[,] ProcessTable()
+        public List<ISymbol>[,] ProcessTable()
         {
             Preprocessor preprocessor = new Preprocessor(_grammarRules);
             foreach (ISymbol symbolsValue in _grammarRules.Symbols.Values)
@@ -61,7 +60,7 @@ namespace Parser.Parse
                         
                         foreach (Terminal terminal in firsts.Where(term=>!term.Equals(Terminal.Epsilon)))
                         {
-                            table[variableNumber, MapTerminalToNumber[terminal.Value]] = variableDefinition;
+                            table[variableNumber, MapTerminalToNumber[terminal.Value]] = variableDefinition.ToList();
                         }
 
                         if (firsts.Contains(Terminal.Epsilon))
@@ -69,7 +68,14 @@ namespace Parser.Parse
                             var variableFollows = variable.Follows;
                             foreach (Terminal variableFollow in variableFollows)
                             {
-                                table[variableNumber, MapTerminalToNumber[variableFollow.Value]] = new[] {Terminal.Epsilon, };
+                                var tableItem = table[variableNumber, MapTerminalToNumber[variableFollow.Value]];
+                                if(tableItem==null) 
+                                    table[variableNumber, MapTerminalToNumber[variableFollow.Value]] = new List<ISymbol> {Terminal.Epsilon, }.ToList();
+                                else // error
+                                {
+                                    tableItem.Add(Terminal.Error);
+                                    tableItem.Add(variableFollow);
+                                }
                             }
                         }
                     }
@@ -77,6 +83,47 @@ namespace Parser.Parse
             }
 
             return table;
+        }
+
+        public bool ParseTheInput(List<Terminal> terminals)
+        {
+            terminals.Add(Terminal.EndOfFile);
+            var terminalArray = terminals.ToArray();
+            Stack<ISymbol> stack = new Stack<ISymbol>();
+            stack.Push(Terminal.EndOfFile);
+            stack.Push(_grammarRules.HeadVariable);
+
+            int position = 0;
+            while (stack.Count > 0 && position<terminalArray.Length)
+            {
+                var current = terminalArray[position];
+                var popedValue=stack.Pop();
+                if (popedValue is Terminal terminal)
+                {
+                    if (terminal.Equals(current))
+                    {
+                        if (current.Equals(Terminal.EndOfFile)) return true;
+                        position++;
+                    }
+                }
+                else if (popedValue is Variable variable)
+                {
+                    var itemsToBepushed=table[MapVariableToNumber[variable.Value], MapTerminalToNumber[current.Value]];
+                    if (itemsToBepushed != null)
+                    {
+                        Stack<ISymbol> reversed = new Stack<ISymbol>();
+                        foreach (ISymbol symbol in itemsToBepushed)
+                        {
+                            reversed.Push(symbol);
+                        }
+                        while(reversed.Count>0)
+                            if (reversed.Peek().Equals(Terminal.Epsilon)) break;
+                                else stack.Push(reversed.Pop());
+                    }
+                }
+            }
+
+            return false;
         }
         
     }

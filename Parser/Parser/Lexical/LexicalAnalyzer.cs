@@ -25,7 +25,7 @@ namespace Parser
             _grammarRules = new GrammarRules();
         }
 
-        public GrammarRules Tokenize()
+        public GrammarRules TokenizeGrammar()
         {
             var lines = Data.Split('\n');
             foreach (var line in lines)
@@ -35,6 +35,16 @@ namespace Parser
             }
 
             return _grammarRules;
+        }
+
+        public List<Terminal> TokenizeInputText()
+        {
+            var lines = Data.Split('\n');
+
+            return (from line in lines
+                .Where(s => !string.IsNullOrEmpty(s)) 
+                from item in line.Split(' ') 
+                select new Terminal(item)).ToList();
         }
 
         private void LineTokenExtractor(string line)
