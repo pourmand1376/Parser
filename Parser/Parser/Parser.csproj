@@ -59,7 +59,8 @@
     <Compile Include="Models\SymbolType.cs" />
     <Compile Include="Models\Terminal.cs" />
     <Compile Include="Models\Variable.cs" />
-    <Compile Include="Parse\LeftToRight_LookAhead_1.cs" />
+    <Compile Include="Parse\LeftToRight_LookAhead_One.cs" />
+    <Compile Include="Parse\LeftToRight_RightMost_Zero.cs" />
     <Compile Include="Parse\Preprocessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

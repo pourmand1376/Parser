@@ -90,7 +90,7 @@ namespace Parser
             Progress<ParseReportModel> progress = new Progress<ParseReportModel>();
             progress.ProgressChanged += Progress_ProgressChanged;
 
-            var leftToRightLookAhead1 = new LeftToRight_LookAhead_1(_grammarRules,progress);
+            var leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules,progress);
             leftToRightLookAhead1.Init();
             RestartStopWatch();
 

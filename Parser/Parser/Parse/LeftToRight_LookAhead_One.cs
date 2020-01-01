@@ -8,7 +8,7 @@ using Parser.Models;
 namespace Parser.Parse
 {
     //LL(1)
-    public class LeftToRight_LookAhead_1
+    public class LeftToRight_LookAhead_One
     {
         private readonly GrammarRules _grammarRules;
         private readonly IProgress<ParseReportModel> _progress;
@@ -20,7 +20,7 @@ namespace Parser.Parse
 
         public int VariableCount { get; set; }
         public int TerminalCount { get; set; }
-        public LeftToRight_LookAhead_1(GrammarRules grammarRules,IProgress<ParseReportModel> progress)
+        public LeftToRight_LookAhead_One(GrammarRules grammarRules,IProgress<ParseReportModel> progress)
         {
             
             _grammarRules = grammarRules;
