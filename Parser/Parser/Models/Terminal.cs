@@ -31,11 +31,6 @@ namespace Parser.Models
             return false;
         }
 
-        protected bool Equals(Terminal other)
-        {
-            return other.Value == Value;
-        }
-
         public override int GetHashCode()
         {
             return Value.GetHashCode();
