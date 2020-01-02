@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using Parser.Models;
+﻿using Parser.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Security.Policy;
 
 namespace Parser.States
 {
@@ -21,7 +18,7 @@ namespace Parser.States
         public State PreviousState { get; set; }
         public ISymbol TransferredSymbol { get; set; }
 
-        public Dictionary<ISymbol,State> NextStates { get; set; }
+        public Dictionary<ISymbol, State> NextStates { get; set; }
         public State()
         {
             RowStates = new HashSet<RowState>();
@@ -34,29 +31,41 @@ namespace Parser.States
                 RowStates.Add(row);
         }
 
+        /// <summary>
+        /// the order is horrible. I did this to support Recursive LL(1) Grammers
+        /// Error :Collection was modified.
+        /// </summary>
         public void AddClosures()
         {
-            ArrayList hashStates = new ArrayList(RowStates.ToList());
-            for (int i = 0; i < hashStates.Count; i++)
+
+            bool changed;
+            do
             {
-                if (((RowState)hashStates[i]).GetSymbolInPosition() is Variable variable)
+                changed = false;
+                foreach (RowState state in RowStates.ToList())
                 {
-                    variable.RuleSet.Definitions
-                        .ForEach(rule => hashStates.Add(new RowState(variable, rule)));
+                    if (state.GetSymbolInPosition() is Variable variable)
+                    {
+                        variable.RuleSet.Definitions
+                            .ForEach(rule =>
+                            {
+                                RowState rowState = new RowState(variable, rule);
+                                if (!RowStates.Contains(rowState))
+                                {
+                                    RowStates.Add(rowState);
+                                    changed = true;
+                                }
+                            });
+                    }
                 }
-            }
-            foreach (RowState state in hashStates)
-            {
-                if (!RowStates.Contains(state))
-                    RowStates.Add(state);
-            }
+            } while (changed);
         }
 
         public IEnumerable<ISymbol> ExtractFirstSymbol()
         {
             foreach (RowState rowState in RowStates)
             {
-                var symbol= rowState.GetSymbolInPosition();
+                var symbol = rowState.GetSymbolInPosition();
                 if (symbol != null && !symbol.Equals(Terminal.Epsilon)) yield return symbol;
             }
         }
@@ -67,7 +76,7 @@ namespace Parser.States
             foreach (RowState rowState in RowStates)
             {
                 var symbolInPosition = rowState.GetSymbolInPosition();
-                if (symbolInPosition!=null && symbolInPosition.Equals(symbol))
+                if (symbolInPosition != null && symbolInPosition.Equals(symbol))
                 {
                     RowState newRowState = rowState.Clone();
                     newRowState.IncrementPosition();
@@ -81,7 +90,7 @@ namespace Parser.States
         {
             if (obj is State state)
             {
-                var result= RowStates.SetEquals(state.RowStates);
+                var result = RowStates.SetEquals(state.RowStates);
                 return result;
             }
 
@@ -101,11 +110,11 @@ namespace Parser.States
 
         public override string ToString()
         {
-            var nextState=string.Join(", ",from next in NextStates
-                select next.Key + ":" + next.Value.StateId);
+            var nextState = string.Join(", ", from next in NextStates
+                                              select next.Key + ":" + next.Value.StateId);
             return $"{StateId}\n " +
                    $"Comming From {PreviousState?.StateId.ToString() ?? "God"} with {TransferredSymbol}\n" +
-                   string.Join("\n", RowStates)+"\n\n"+nextState;
+                   string.Join("\n", RowStates) + "\n\n" + nextState;
         }
     }
 }

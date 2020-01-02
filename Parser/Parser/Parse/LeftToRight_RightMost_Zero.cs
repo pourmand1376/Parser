@@ -9,26 +9,28 @@ namespace Parser.Parse
     public class LeftToRight_RightMost_Zero
     {
         private readonly GrammarRules _grammarRules;
-        private FiniteStateMachine _finiteStateMachine;
-        private MapperToNumber mapperToNumber;
+        public FiniteStateMachine FiniteStateMachine { get; }
+        public  MapperToNumber MapperToNumber { get;  }
         public LeftToRight_RightMost_Zero(GrammarRules grammarRules)
         {
             _grammarRules = grammarRules;
-            mapperToNumber = new MapperToNumber(_grammarRules);
+            MapperToNumber = new MapperToNumber(_grammarRules);
+            FiniteStateMachine = new FiniteStateMachine(_grammarRules);
         }
 
         public string CalculateStateMachine()
         {
-            _finiteStateMachine = new FiniteStateMachine(_grammarRules);
-            _finiteStateMachine.InitializeAllStates();
-            return _finiteStateMachine.ToString();
+            MapperToNumber.Initialize();
+            FiniteStateMachine.InitializeAllStates();
+            return FiniteStateMachine.ToString();
         }
         
-        public void FillTable()
+        public LLGrammarTable FillTable()
         {
-            LLGrammarTable grammarTable = new LLGrammarTable(_finiteStateMachine,mapperToNumber);
-            grammarTable.Init();
+            LLGrammarTable grammarTable = new LLGrammarTable(FiniteStateMachine,MapperToNumber);
+            grammarTable.Init(); 
             grammarTable.FillTable();
+            return grammarTable;
         }
     }
 }

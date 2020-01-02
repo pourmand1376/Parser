@@ -7,5 +7,6 @@
     {
         Reduce = 0,
         Shift = 1,
+        Accept = 2,
     }
 }

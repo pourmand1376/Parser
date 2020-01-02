@@ -39,16 +39,13 @@ namespace Parser.State
                 {
                     ParserAction parser = new ParserAction();
                     parser.Action = Action.Reduce;
-                    foreach (var rowState in currentState.RowStates)
-                    {
-                        parser.Variable = rowState.Variable;
-                        parser.Handle = rowState.Rule;
-                    }
-                    
+                    parser.Variable = currentState.RowStates.First().Variable;
+                    parser.Handle = currentState.RowStates.First().Rule;
                     for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
                     {
-
+                        ActionTable[currentState.StateId, i] = parser;
                     }
+                    
                     continue;
                 }
                 foreach (KeyValuePair<ISymbol, States.State> fsmStateNextState in currentState.NextStates)

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -166,8 +167,37 @@ namespace Parser
 
         private void tabLR_0_Enter(object sender, EventArgs e)
         {
-            LeftToRight_RightMost_Zero leftToRightRightMostZero = new LeftToRight_RightMost_Zero(_grammarRules);
-            txtLRStates.Text=leftToRightRightMostZero.CalculateStateMachine();
+            dgvLR_0.Rows.Clear();
+            dgvLR_0.Columns.Clear();
+
+            LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules);
+            txtLRStates.Text=Lr_zero.CalculateStateMachine();
+
+            var grammarTable = Lr_zero.FillTable();
+            foreach(var keyValuePair in Lr_zero.MapperToNumber.MapTerminalToNumber)
+            {
+                dgvLR_0.Columns.Add(keyValuePair.Key, keyValuePair.Key);
+            }
+            foreach(var keyValuePair in Lr_zero.MapperToNumber.MapVariableToNumber.Skip(1))
+            {
+                dgvLR_0.Columns.Add(keyValuePair.Key, keyValuePair.Key);
+            }
+            foreach (var keyValue in Lr_zero.FiniteStateMachine.States)
+            {
+                dgvLR_0.Rows.Add(new DataGridViewRow()
+                {
+                    HeaderCell = { Value = keyValue.StateId },
+                });
+            }
+
+            foreach (var state in Lr_zero.FiniteStateMachine.States)
+            {
+                for (int j = 0; j < Lr_zero.MapperToNumber.TerminalCount; j++)
+                {
+                    dgvLR_0.Rows[state.StateId].Cells[j].Value = grammarTable.ActionTable[state.StateId, j];
+                }
+            }
+            
         }
 
         private void tabLR_0_Click(object sender, EventArgs e)

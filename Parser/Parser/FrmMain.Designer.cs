@@ -54,6 +54,7 @@
             this.tab_SLR = new System.Windows.Forms.TabPage();
             this.tab_Clr_1 = new System.Windows.Forms.TabPage();
             this.lblTime = new System.Windows.Forms.Label();
+            this.dgvLR_0 = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -62,6 +63,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).BeginInit();
             this.tabLR_0.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -275,6 +277,7 @@
             // 
             // tabLR_0
             // 
+            this.tabLR_0.Controls.Add(this.dgvLR_0);
             this.tabLR_0.Controls.Add(this.txtLRStates);
             this.tabLR_0.Location = new System.Drawing.Point(4, 22);
             this.tabLR_0.Name = "tabLR_0";
@@ -290,7 +293,7 @@
             // 
             this.txtLRStates.Location = new System.Drawing.Point(6, 6);
             this.txtLRStates.Name = "txtLRStates";
-            this.txtLRStates.Size = new System.Drawing.Size(214, 423);
+            this.txtLRStates.Size = new System.Drawing.Size(185, 423);
             this.txtLRStates.TabIndex = 0;
             this.txtLRStates.Text = "";
             // 
@@ -323,6 +326,20 @@
             this.lblTime.TabIndex = 4;
             this.lblTime.Text = "label4";
             // 
+            // dgvLR_0
+            // 
+            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvLR_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvLR_0.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
+            this.dgvLR_0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLR_0.Location = new System.Drawing.Point(197, 6);
+            this.dgvLR_0.Name = "dgvLR_0";
+            this.dgvLR_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvLR_0.Size = new System.Drawing.Size(437, 200);
+            this.dgvLR_0.TabIndex = 2;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,6 +361,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReport)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).EndInit();
             this.tabLR_0.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,6 +395,7 @@
         private System.Windows.Forms.TabPage tab_SLR;
         private System.Windows.Forms.TabPage tab_Clr_1;
         private System.Windows.Forms.RichTextBox txtLRStates;
+        private System.Windows.Forms.DataGridView dgvLR_0;
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Parser.Models;
 
 namespace Parser.State
@@ -27,5 +28,26 @@ namespace Parser.State
         /// variable to be reduced in the place of handle
         /// </summary>
         public Variable Variable { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (Action == Action.Reduce)
+            {
+                sb.Append("R");
+                sb.Append("-" + Variable.Value);
+            }
+            else if(Action==Action.Shift)
+            {
+                sb.Append("S");
+                sb.Append(ShiftState);
+            }
+            else if (Action == Action.Accept)
+            {
+                sb.Append("Acc");
+            }
+
+            return sb.ToString();
+        }
     }
 }
