@@ -25,8 +25,9 @@ namespace Parser.States
             {
                 firstState.AddRowState(new RowState(_grammarRules.HeadVariable,rule));
             }
+            firstState.AddClosures();
             queue.Enqueue(firstState);
-            
+            int stateNo = 0;
             while (queue.Count > 0)
             {
                 var state = queue.Dequeue();
@@ -34,8 +35,19 @@ namespace Parser.States
                 {
                     continue;
                 }
+
+                state.StateId = stateNo++;
                 States.Add(state);
-                state.AddClosures();
+                //if it's not the first State
+                if (state.PreviousState != null)
+                {
+                    if (!state.PreviousState.NextStates.ContainsKey(state.TransferredSymbol))
+                    {
+                        state.PreviousState.NextStates.Add(state.TransferredSymbol,state);
+                    }
+                }
+
+                //producing new items
                 var extractFirstSymbol = state.ExtractFirstSymbol().Distinct();
                 foreach (ISymbol symbol in extractFirstSymbol)
                 {
@@ -44,7 +56,12 @@ namespace Parser.States
                     {
                         nextState.PreviousState = state;
                         nextState.TransferredSymbol = symbol;
-                        if(!queue.Contains(nextState))
+                        nextState.AddClosures();
+                        if (nextState.Equals(state))
+                        {
+                            state.NextStates.Add(symbol,state);
+                        }
+                        if(!States.Contains(nextState))
                             queue.Enqueue(nextState);
                     }
                 }

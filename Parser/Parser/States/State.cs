@@ -2,6 +2,7 @@
 using Parser.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Security.Policy;
 
 namespace Parser.States
@@ -14,16 +15,17 @@ namespace Parser.States
     /// </summary>
     public class State
     {
-
+        public int StateId { get; set; }
         public HashSet<RowState> RowStates { get; }
 
         public State PreviousState { get; set; }
         public ISymbol TransferredSymbol { get; set; }
 
+        public Dictionary<ISymbol,State> NextStates { get; set; }
         public State()
         {
             RowStates = new HashSet<RowState>();
-            
+            NextStates = new Dictionary<ISymbol, State>();
         }
 
         public void AddRowState(RowState row)
@@ -99,7 +101,11 @@ namespace Parser.States
 
         public override string ToString()
         {
-            return string.Join("\n", RowStates);
+            var nextState=string.Join(", ",from next in NextStates
+                select next.Key + ":" + next.Value.StateId);
+            return $"{StateId}\n " +
+                   $"Comming From {PreviousState?.StateId.ToString() ?? "God"} with {TransferredSymbol}\n" +
+                   string.Join("\n", RowStates)+"\n\n"+nextState;
         }
     }
 }
