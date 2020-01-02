@@ -25,7 +25,7 @@ namespace Parser.Models
         {
             if (obj is Terminal term)
             {
-                return term.Value == Value;
+                return term.Value.Equals(Value);
             }
 
             return false;

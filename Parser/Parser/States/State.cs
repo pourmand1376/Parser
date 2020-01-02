@@ -1,5 +1,8 @@
-﻿using Parser.Models;
+﻿using System.Collections;
+using Parser.Models;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Policy;
 
 namespace Parser.States
 {
@@ -14,12 +17,13 @@ namespace Parser.States
 
         public HashSet<RowState> RowStates { get; }
 
-        public Dictionary<ISymbol, State> SymbolState { get; }
+        public State PreviousState { get; set; }
+        public ISymbol TransferredSymbol { get; set; }
 
         public State()
         {
             RowStates = new HashSet<RowState>();
-            SymbolState = new Dictionary<ISymbol, State>();
+            
         }
 
         public void AddRowState(RowState row)
@@ -30,13 +34,19 @@ namespace Parser.States
 
         public void AddClosures()
         {
-            foreach (RowState rowState in RowStates)
+            ArrayList hashStates = new ArrayList(RowStates.ToList());
+            for (int i = 0; i < hashStates.Count; i++)
             {
-                if (rowState.GetSymbolInPosition() is Variable variable)
+                if (((RowState)hashStates[i]).GetSymbolInPosition() is Variable variable)
                 {
                     variable.RuleSet.Definitions
-                        .ForEach(rule => RowStates.Add(new RowState(variable, rule)));
+                        .ForEach(rule => hashStates.Add(new RowState(variable, rule)));
                 }
+            }
+            foreach (RowState state in hashStates)
+            {
+                if (!RowStates.Contains(state))
+                    RowStates.Add(state);
             }
         }
 
@@ -44,34 +54,33 @@ namespace Parser.States
         {
             foreach (RowState rowState in RowStates)
             {
-                yield return rowState.GetSymbolInPosition();
+                var symbol= rowState.GetSymbolInPosition();
+                if (symbol != null && !symbol.Equals(Terminal.Epsilon)) yield return symbol;
             }
         }
 
         public State CreateNextState(ISymbol symbol)
         {
-            State newstate= new State();
-            foreach (RowState rowState in RowStates)
+            State newstate = new State();
+            foreach (RowState rowState in RowStates.Where(f=>!f.Finished))
             {
-                if (rowState.GetSymbolInPosition().Equals(symbol))
+                var symbolInPosition = rowState.GetSymbolInPosition();
+                if (symbolInPosition!=null && symbolInPosition.Equals(symbol))
                 {
-                    RowState newRowState=rowState.Clone();
+                    RowState newRowState = rowState.Clone();
                     newRowState.IncrementPosition();
+                    newstate.AddRowState(newRowState);
                 }
             }
             return newstate;
         }
 
-        public void AddStateToDictionary(ISymbol symbol, State state)
-        {
-            if(!SymbolState.ContainsKey(symbol))
-                SymbolState.Add(symbol,state);
-        }
         public override bool Equals(object obj)
         {
             if (obj is State state)
             {
-                return RowStates.Equals(state.RowStates);
+                var result= RowStates.SetEquals(state.RowStates);
+                return result;
             }
 
             return false;
@@ -79,7 +88,18 @@ namespace Parser.States
 
         public override int GetHashCode()
         {
-            return RowStates.GetHashCode();
+            int hash = 1;
+            foreach (RowState rowState in RowStates)
+            {
+                hash = (hash * 17) + rowState.GetHashCode();
+            }
+
+            return hash;
+        }
+
+        public override string ToString()
+        {
+            return string.Join("\n", RowStates);
         }
     }
 }

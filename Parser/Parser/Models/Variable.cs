@@ -3,19 +3,6 @@ using System.Linq;
 
 namespace Parser.Models
 {
-    public class RuleSet
-    {
-        public RuleSet(Variable variable)
-        {
-            Variable = variable;
-            Definitions = new List<IEnumerable<ISymbol>>();
-        }
-
-        public List<IEnumerable<ISymbol>> Definitions { get; set; }
-
-        public Variable Variable { get; }
-    }
-
     public class Variable:ISymbol
     {
         public SymbolType SymbolType { get; }
@@ -72,16 +59,12 @@ namespace Parser.Models
         {
             if (obj is Variable var)
             {
-                return var.Value == Value;
+                return var.Value.Equals(Value);
             }
 
             return false;
         }
 
-        protected bool Equals(Variable other)
-        {
-            return other.Value == Value;
-        }
 
         public override int GetHashCode()
         {

@@ -158,5 +158,21 @@ namespace Parser
         {
             ChooseFile(txtTestFile);
         }
+
+        private void tabItem_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabLR_0_Enter(object sender, EventArgs e)
+        {
+            LeftToRight_RightMost_Zero leftToRightRightMostZero = new LeftToRight_RightMost_Zero(_grammarRules);
+            txtLRStates.Text=leftToRightRightMostZero.FillStateMachine();
+        }
+
+        private void tabLR_0_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

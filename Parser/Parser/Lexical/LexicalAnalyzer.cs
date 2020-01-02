@@ -14,7 +14,7 @@ namespace Parser
     {
         // Variable -> ProducedRule 
         // Produced Rule is a list of variable or terminals
-
+        private const string Head = "Head";
         private readonly GrammarRules _grammarRules;
 
         private string Data { get; set; }
@@ -27,6 +27,9 @@ namespace Parser
 
         public GrammarRules TokenizeGrammar()
         {
+            //My Wife insisted that first rule should be the head!
+            _grammarRules.GetOrCreateSymbol(Head, SymbolType.Variable);
+
             var lines = Data.Split('\n');
             foreach (var line in lines)
             {
@@ -79,10 +82,13 @@ namespace Parser
                 symbols.Add(_grammarRules.GetOrCreateSymbol("",SymbolType.Terminal));
             }
 
-
+            
             if (_grammarRules.HeadVariable == null)
             {
-                _grammarRules.HeadVariable = (Variable)headVariable;
+                Variable addedVariable=(Variable) _grammarRules.GetOrCreateSymbol(Head, SymbolType.Variable);
+                addedVariable.RuleSet.Definitions.Add(new List<ISymbol>(){headVariable});
+                _grammarRules.HeadVariable = addedVariable;
+                //_grammarRules.HeadVariable = (Variable)headVariable;
             }
             ((Variable)headVariable).RuleSet.Definitions.Add(symbols);
         }

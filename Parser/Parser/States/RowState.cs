@@ -2,6 +2,7 @@
 using Parser.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Parser.States
 {
@@ -19,6 +20,8 @@ namespace Parser.States
         public Variable Variable { get; }
 
         public IEnumerable<ISymbol> Rule { get; }
+
+        public bool Finished => Position >= Rule.Count();
 
         public RowState(Variable variable, IEnumerable<ISymbol> rule, int position = 0)
         {
@@ -38,7 +41,7 @@ namespace Parser.States
                 }
                 position++;
             }
-            throw new Exception("Position is not valid");
+            return null;
         }
 
         public void IncrementPosition()
@@ -55,13 +58,43 @@ namespace Parser.States
         {
             if (obj is RowState rowState)
             {
-                if (rowState.Variable == this.Variable && rowState.Position == this.Position)
+                if (rowState.Variable.Equals(Variable) && rowState.Position == this.Position)
                 {
-                    return Rule.ToList().Equals(rowState.Rule);
+                    return Rule.ToList().SequenceEqual(rowState.Rule);
                 }
             }
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            hash = (hash * 7) + Position.GetHashCode();
+            hash = (hash * 7) + Variable.GetHashCode();
+            foreach (ISymbol symbol in Rule)
+            {
+                hash = (hash * 17) + symbol.GetHashCode();
+            } 
+            return hash;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            int position = 0;
+            bool printed = false;
+            foreach (ISymbol symbol in Rule)
+            {
+                if (position == Position)
+                {
+                    stringBuilder.Append(" ☺ ");
+                    printed = true;
+                }
+                stringBuilder.Append(symbol);
+                position++;
+            }
+            if(!printed) stringBuilder.Append(" ☺ ");
+            return $"{Variable} ::= {stringBuilder}";
+        }
     }
 }

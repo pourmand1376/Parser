@@ -1,6 +1,7 @@
 ﻿using Parser.Lexical;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Linq;
 using Parser.Models;
 
 namespace Parser.States
@@ -17,30 +18,43 @@ namespace Parser.States
         }
         public void InitializeAllStates()
         {
-            Stack<State> stack = new Stack<State>();
+            Queue<State> queue = new Queue<State>();
 
             State firstState = new State();
             foreach (var rule in _grammarRules.HeadVariable.RuleSet.Definitions)
             {
                 firstState.AddRowState(new RowState(_grammarRules.HeadVariable,rule));
             }
-            stack.Push(firstState);
-            while (stack.Count > 0)
+            queue.Enqueue(firstState);
+            
+            while (queue.Count > 0)
             {
-                var state = stack.Pop();
-                if (!States.Contains(state))
+                var state = queue.Dequeue();
+                if (States.Contains(state))
                 {
                     continue;
                 }
                 States.Add(state);
                 state.AddClosures();
-                var extractFirstSymbol = state.ExtractFirstSymbol();
+                var extractFirstSymbol = state.ExtractFirstSymbol().Distinct();
                 foreach (ISymbol symbol in extractFirstSymbol)
                 {
                     var nextState = state.CreateNextState(symbol);
-                    stack.Push(nextState);
+                    if (nextState.RowStates.Count > 0)
+                    {
+                        nextState.PreviousState = state;
+                        nextState.TransferredSymbol = symbol;
+                        if(!queue.Contains(nextState))
+                            queue.Enqueue(nextState);
+                    }
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return string.Join("\n-------------\n", States);
+        }
     }
+
 }
