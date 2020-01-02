@@ -91,7 +91,7 @@ namespace Parser.Parse
                              && !symbol.Equals(Terminal.Epsilon)
                              )
                         {
-                            terminals.Add((Terminal) GrammarRules.Symbols [terminal.Value]);
+                            terminals.Add((Terminal) GrammarRules.GetOrCreateSymbol(terminal.Value,SymbolType.Terminal));
                             canBeEmpty = false;
                             break;
                         }
