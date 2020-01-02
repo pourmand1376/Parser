@@ -23,7 +23,7 @@ namespace Parser.Parse
                     if ( !variable.FirstReady )
                     {
                         variable.IsCalculatingFirst = true;
-                        variable.Firsts.AddRange(FirstSet(variable.Definitions));
+                        variable.Firsts.AddRange(FirstSet(variable.RuleSet.Definitions));
                         variable.IsCalculatingFirst = false;
                         variable.FirstReady = true;
                     }
@@ -105,7 +105,7 @@ namespace Parser.Parse
                             if ( !variable.FirstReady )
                             {
                                 variable.IsCalculatingFirst = true;
-                                var first = FirstSet(variable.Definitions);
+                                var first = FirstSet(variable.RuleSet.Definitions);
                                 variable.IsCalculatingFirst = false;
                                 variable.Firsts.AddRange(first);
                                 variable.FirstReady = true;
@@ -145,7 +145,7 @@ namespace Parser.Parse
 
                  List<Terminal> follow = new List<Terminal>();
                  //go over all rules that contain the grammar
-                 foreach ( IEnumerable<ISymbol> currentRule in currentVar.Definitions
+                 foreach ( IEnumerable<ISymbol> currentRule in currentVar.RuleSet.Definitions
                      .Where(rule => rule.Contains(variable)) )
                  {
 

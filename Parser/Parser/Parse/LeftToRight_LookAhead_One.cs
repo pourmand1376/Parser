@@ -60,7 +60,7 @@ namespace Parser.Parse
                 if (symbolsValue is Variable variable)
                 {
                     var variableNumber = MapVariableToNumber[variable.Value];
-                    foreach (IEnumerable<ISymbol> variableDefinition in variable.Definitions)
+                    foreach (IEnumerable<ISymbol> variableDefinition in variable.RuleSet.Definitions)
                     {
                         var firsts=preprocessor.FirstSet(new List<IEnumerable<ISymbol>>() {variableDefinition});
                         

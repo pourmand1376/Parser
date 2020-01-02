@@ -3,13 +3,34 @@ using System.Linq;
 
 namespace Parser.Models
 {
+    public class Rule
+    {
+        public IEnumerable<ISymbol> Symbols { get; set; }
+
+        public Rule()
+        {
+            Symbols = new List<ISymbol>();
+        }
+    }
+    public class RuleSet
+    {
+        public RuleSet(Variable variable)
+        {
+            Variable = variable;
+            Definitions = new List<IEnumerable<ISymbol>>();
+        }
+
+        public List<IEnumerable<ISymbol>> Definitions { get; set; }
+
+        public Variable Variable { get; }
+    }
+
     public class Variable:ISymbol
     {
+        private readonly RuleSet _ruleSet;
         public SymbolType SymbolType { get; }
 
         public string Value { get; }
-
-        public List<IEnumerable<ISymbol>> Definitions { get; set; }
 
         public List<Terminal> Firsts { get; set; }
         public List<Terminal> Follows { get; set; }
@@ -21,22 +42,27 @@ namespace Parser.Models
         //Can't check if follow is null because $ should be added first
         public bool FollowReady { get; set; }
 
+        public RuleSet RuleSet
+        {
+            get { return _ruleSet; }
+        }
+
         public Variable(string value)
         {
             SymbolType = SymbolType.Variable;
             Value = value;
-            Definitions = new List<IEnumerable<ISymbol>>();
             Firsts = new List<Terminal>();
             Follows = new List<Terminal>();
             FirstReady = false;
             FollowReady = false;
+            _ruleSet = new RuleSet(this);
         }
 
         public string ShowRules()
         {
             return $"{this} ==> " +
                    string.Join(" | ", (
-                       from ruleSet in Definitions
+                       from ruleSet in RuleSet.Definitions
                        select string.Join("",ruleSet)));
         }
 

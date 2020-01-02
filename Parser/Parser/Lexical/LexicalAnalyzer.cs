@@ -84,7 +84,7 @@ namespace Parser
             {
                 _grammarRules.HeadVariable = (Variable)headVariable;
             }
-            ((Variable)headVariable).Definitions.Add(symbols);
+            ((Variable)headVariable).RuleSet.Definitions.Add(symbols);
         }
 
     }
