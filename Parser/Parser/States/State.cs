@@ -64,7 +64,7 @@ namespace Parser.States
         public State CreateNextState(ISymbol symbol)
         {
             State newstate = new State();
-            foreach (RowState rowState in RowStates.Where(f=>!f.Finished))
+            foreach (RowState rowState in RowStates)
             {
                 var symbolInPosition = rowState.GetSymbolInPosition();
                 if (symbolInPosition!=null && symbolInPosition.Equals(symbol))

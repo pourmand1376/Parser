@@ -66,5 +66,15 @@ namespace Parser.Parse
             }
             MapTerminalToNumber.Add(Terminal.EndOfFile.Value, TerminalCount++);
         }
+
+        public int Map(Terminal terminal)
+        {
+            return MapTerminalToNumber[terminal.Value];
+        }
+
+        public int Map(Variable variable)
+        {
+            return MapVariableToNumber[variable.Value];
+        }
     }
 }

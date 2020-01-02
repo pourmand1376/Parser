@@ -167,7 +167,7 @@ namespace Parser
         private void tabLR_0_Enter(object sender, EventArgs e)
         {
             LeftToRight_RightMost_Zero leftToRightRightMostZero = new LeftToRight_RightMost_Zero(_grammarRules);
-            txtLRStates.Text=leftToRightRightMostZero.FillStateMachine();
+            txtLRStates.Text=leftToRightRightMostZero.CalculateStateMachine();
         }
 
         private void tabLR_0_Click(object sender, EventArgs e)

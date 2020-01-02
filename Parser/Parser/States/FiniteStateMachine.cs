@@ -57,12 +57,14 @@ namespace Parser.States
                         nextState.PreviousState = state;
                         nextState.TransferredSymbol = symbol;
                         nextState.AddClosures();
-                        if (nextState.Equals(state))
-                        {
-                            state.NextStates.Add(symbol,state);
-                        }
+
+                        //It's right not to add the state
                         if(!States.Contains(nextState))
                             queue.Enqueue(nextState);
+                        else
+                        {//but we should add next state to know where to go
+                            state.NextStates.Add(symbol,States.First(f=>f.Equals(nextState)));
+                        }
                     }
                 }
             }

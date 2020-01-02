@@ -6,7 +6,7 @@ namespace Parser.State
     /// <summary>
     /// action that the parser should do
     /// </summary>
-    public abstract class ParserAction
+    public class ParserAction
     {
         /// <summary>
         /// redurce vs shift
