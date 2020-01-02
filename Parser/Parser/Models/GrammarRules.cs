@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Parser.Models;
+using Parser.State;
 
 namespace Parser.Lexical
 {
@@ -18,6 +19,8 @@ namespace Parser.Lexical
         public IEnumerable<ISymbol> SymbolList => Symbols.Values;
 
         public Variable HeadVariable { get; set; }
+
+        
 
         public GrammarRules()
         {

@@ -8,48 +8,26 @@ using Parser.Models;
 namespace Parser.Parse
 {
     //LL(1)
+
     public class LeftToRight_LookAhead_One
     {
         private readonly GrammarRules _grammarRules;
         private readonly IProgress<ParseReportModel> _progress;
         private List<ISymbol>[,] table;
+        private readonly MapperToNumber _mapperToNumber;
 
-
-        public Dictionary<string, int> MapVariableToNumber { get; set; }
-        public Dictionary<string, int> MapTerminalToNumber { get; set; }
-
-        public int VariableCount { get; set; }
-        public int TerminalCount { get; set; }
         public LeftToRight_LookAhead_One(GrammarRules grammarRules,IProgress<ParseReportModel> progress)
         {
             
             _grammarRules = grammarRules;
             _progress = progress;
-            MapTerminalToNumber = new Dictionary<string, int>();
-            MapVariableToNumber = new Dictionary<string, int>();
+            _mapperToNumber = new MapperToNumber(_grammarRules);
         }
 
         public void Init()
         {
-            VariableCount = 0;
-            TerminalCount = 0;
-            foreach (var symbol in _grammarRules.SymbolList
-                .Where(symbol => !symbol.Equals(Terminal.Epsilon) && 
-                                 !symbol.Equals(Terminal.EndOfFile)))
-            {
-                if (symbol.SymbolType == SymbolType.Variable)
-                {
-                    MapVariableToNumber.Add(symbol.Value,VariableCount);
-                    VariableCount++;
-                }
-                else
-                {
-                    MapTerminalToNumber.Add(symbol.Value,TerminalCount);
-                    TerminalCount++;
-                }
-            }
-            MapTerminalToNumber.Add(Terminal.EndOfFile.Value,TerminalCount++);
-            table = new List<ISymbol>[VariableCount,TerminalCount];
+            _mapperToNumber.Initialize();
+            table = new List<ISymbol>[_mapperToNumber.VariableCount, _mapperToNumber.TerminalCount];
         }
 
         public List<ISymbol>[,] ProcessTable()
@@ -59,14 +37,14 @@ namespace Parser.Parse
             {
                 if (symbolsValue is Variable variable)
                 {
-                    var variableNumber = MapVariableToNumber[variable.Value];
+                    var variableNumber = _mapperToNumber.MapVariableToNumber[variable.Value];
                     foreach (IEnumerable<ISymbol> variableDefinition in variable.RuleSet.Definitions)
                     {
                         var firsts=preprocessor.FirstSet(new List<IEnumerable<ISymbol>>() {variableDefinition});
                         
                         foreach (Terminal terminal in firsts.Where(term=>!term.Equals(Terminal.Epsilon)))
                         {
-                            table[variableNumber, MapTerminalToNumber[terminal.Value]] = variableDefinition.ToList();
+                            table[variableNumber, _mapperToNumber.MapTerminalToNumber[terminal.Value]] = variableDefinition.ToList();
                         }
 
                         if (firsts.Contains(Terminal.Epsilon))
@@ -74,9 +52,9 @@ namespace Parser.Parse
                             var variableFollows = variable.Follows;
                             foreach (Terminal variableFollow in variableFollows)
                             {
-                                var tableItem = table[variableNumber, MapTerminalToNumber[variableFollow.Value]];
+                                var tableItem = table[variableNumber, _mapperToNumber.MapTerminalToNumber[variableFollow.Value]];
                                 if(tableItem==null) 
-                                    table[variableNumber, MapTerminalToNumber[variableFollow.Value]] = new List<ISymbol> {Terminal.Epsilon, }.ToList();
+                                    table[variableNumber, _mapperToNumber.MapTerminalToNumber[variableFollow.Value]] = new List<ISymbol> {Terminal.Epsilon, }.ToList();
                                 else // error
                                 {
                                     tableItem.Add(Terminal.Error);
@@ -124,7 +102,7 @@ namespace Parser.Parse
                 }
                 else if (popedValue is Variable variable)
                 {
-                    var itemsToBepushed=table[MapVariableToNumber[variable.Value], MapTerminalToNumber[current.Value]];
+                    var itemsToBepushed=table[_mapperToNumber.MapVariableToNumber[variable.Value], _mapperToNumber.MapTerminalToNumber[current.Value]];
                     if (itemsToBepushed != null)
                     {
                         Stack<ISymbol> reversed = new Stack<ISymbol>();

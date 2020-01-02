@@ -3,15 +3,6 @@ using System.Linq;
 
 namespace Parser.Models
 {
-    public class Rule
-    {
-        public IEnumerable<ISymbol> Symbols { get; set; }
-
-        public Rule()
-        {
-            Symbols = new List<ISymbol>();
-        }
-    }
     public class RuleSet
     {
         public RuleSet(Variable variable)
@@ -27,7 +18,6 @@ namespace Parser.Models
 
     public class Variable:ISymbol
     {
-        private readonly RuleSet _ruleSet;
         public SymbolType SymbolType { get; }
 
         public string Value { get; }
@@ -42,10 +32,7 @@ namespace Parser.Models
         //Can't check if follow is null because $ should be added first
         public bool FollowReady { get; set; }
 
-        public RuleSet RuleSet
-        {
-            get { return _ruleSet; }
-        }
+        public RuleSet RuleSet { get; }
 
         public Variable(string value)
         {
@@ -55,7 +42,7 @@ namespace Parser.Models
             Follows = new List<Terminal>();
             FirstReady = false;
             FollowReady = false;
-            _ruleSet = new RuleSet(this);
+            RuleSet = new RuleSet(this);
         }
 
         public string ShowRules()

@@ -99,12 +99,12 @@ namespace Parser
             lblTime.Text = $"Creating LookAhead Table took {_stopwatch.ElapsedMilliseconds} ms.";
             dataGridViewLL_1.Columns.Clear();
             dataGridViewLL_1.Rows.Clear();
-            foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapTerminalToNumber)
+            foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapperToNumber.MapTerminalToNumber)
             {
                 dataGridViewLL_1.Columns.Add(keyValuePair.Key, keyValuePair.Key);
             }
 
-            foreach (var keyValue in leftToRightLookAhead1.MapVariableToNumber)
+            foreach (var keyValue in leftToRightLookAhead1.MapperToNumber.MapVariableToNumber)
             {
                 dataGridViewLL_1.Rows.Add(new DataGridViewRow()
                 {
@@ -113,9 +113,9 @@ namespace Parser
             }
 
             bool isValid = true;
-            for (var i = 0; i < leftToRightLookAhead1.VariableCount; i++)
+            for (var i = 0; i < leftToRightLookAhead1.MapperToNumber.VariableCount; i++)
             {
-                for (var j = 0; j < leftToRightLookAhead1.TerminalCount; j++)
+                for (var j = 0; j < leftToRightLookAhead1.MapperToNumber.TerminalCount; j++)
                 {
                     if (data[i, j] == null)
                     {
