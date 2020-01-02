@@ -16,7 +16,7 @@ namespace Parser.Parse
 
         public void CalculateAllFirsts()
         {
-            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
+            foreach ( ISymbol symbolsValue in GrammarRules.SymbolList )
             {
                 if ( symbolsValue is Variable variable )
                 {
@@ -44,7 +44,7 @@ namespace Parser.Parse
 
         private void ClearAllFollowReady()
         {
-            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
+            foreach ( ISymbol symbolsValue in GrammarRules.SymbolList )
             {
                 if ( symbolsValue is Variable variable )
                 { 
@@ -55,7 +55,7 @@ namespace Parser.Parse
 
         private void RemoveDuplicates()
         {
-            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
+            foreach ( ISymbol symbolsValue in GrammarRules.SymbolList)
             {
                 if ( symbolsValue is Variable variable )
                 {
@@ -66,7 +66,7 @@ namespace Parser.Parse
         }
         private void CalculateFollowSets()
         {
-            foreach ( ISymbol symbolsValue in GrammarRules.Symbols.Values )
+            foreach ( ISymbol symbolsValue in GrammarRules.SymbolList)
             {
                 if ( symbolsValue is Variable variable )
                 {
@@ -138,7 +138,7 @@ namespace Parser.Parse
                 return variable.Follows;
 
             variable.IsCalculatingFollow = true;
-            var result = GrammarRules.Symbols.Values.SelectMany(symbol =>
+            var result = GrammarRules.SymbolList.SelectMany(symbol =>
              {
                  //if it's terminal do nothing
                  if ( !( symbol is Variable currentVar ) ) return new List<Terminal>();

@@ -10,7 +10,12 @@ namespace Parser.Lexical
 {
     public class GrammarRules
     {
-        public Dictionary<string,ISymbol> Symbols { get; set; }
+        /// <summary>
+        /// Accessing all symbols with string
+        /// </summary>
+        private Dictionary<string,ISymbol> Symbols { get; set; }
+
+        public IEnumerable<ISymbol> SymbolList => Symbols.Values;
 
         public Variable HeadVariable { get; set; }
 
@@ -18,7 +23,12 @@ namespace Parser.Lexical
         {
             Symbols = new Dictionary<string, ISymbol>();
         }
-
+        /// <summary>
+        /// access a symbol with string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="symbolType"></param>
+        /// <returns></returns>
         public ISymbol GetOrCreateSymbol(string value,SymbolType symbolType)
         {
             if (symbolType == SymbolType.Terminal)

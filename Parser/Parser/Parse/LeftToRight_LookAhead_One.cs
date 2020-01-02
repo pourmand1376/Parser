@@ -33,7 +33,7 @@ namespace Parser.Parse
         {
             VariableCount = 0;
             TerminalCount = 0;
-            foreach (var symbol in _grammarRules.Symbols.Values
+            foreach (var symbol in _grammarRules.SymbolList
                 .Where(symbol => !symbol.Equals(Terminal.Epsilon) && 
                                  !symbol.Equals(Terminal.EndOfFile)))
             {
@@ -55,7 +55,7 @@ namespace Parser.Parse
         public List<ISymbol>[,] ProcessTable()
         {
             Preprocessor preprocessor = new Preprocessor(_grammarRules);
-            foreach (ISymbol symbolsValue in _grammarRules.Symbols.Values)
+            foreach (ISymbol symbolsValue in _grammarRules.SymbolList)
             {
                 if (symbolsValue is Variable variable)
                 {

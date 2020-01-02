@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Parser.Parse
+﻿namespace Parser.Parse
 {
-    class LeftToRight_RightMost_Zero
+    public class LeftToRight_RightMost_Zero
     {
+
+        public LeftToRight_RightMost_Zero()
+        {
+            
+        }
     }
 }

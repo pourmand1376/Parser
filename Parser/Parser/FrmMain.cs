@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Parser
 {
-    public partial class FrmMain :Form
+    public partial class FrmMain : Form
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private GrammarRules _grammarRules;
@@ -21,10 +21,10 @@ namespace Parser
             InitializeComponent();
         }
 
-        private void btnChooseFile_Click(object sender,EventArgs e)
+        private void btnChooseFile_Click(object sender, EventArgs e)
         {
             ChooseFile(txtgrammarFile);
-            btnParseGrammar_Click(null,null);
+            btnParseGrammar_Click(null, null);
         }
 
         private void ChooseFile(TextBox textbox)
@@ -43,7 +43,7 @@ namespace Parser
             textbox.Text = openFile.FileName;
         }
 
-        private void btnParseGrammar_Click(object sender,EventArgs e)
+        private void btnParseGrammar_Click(object sender, EventArgs e)
         {
             listBoxGrammar.Items.Clear();
             listBoxFirst.Items.Clear();
@@ -53,18 +53,18 @@ namespace Parser
             _grammarRules = lex.TokenizeGrammar();
             _stopwatch.Stop();
             lblTime.Text = $"Tokenizing process took {_stopwatch.ElapsedMilliseconds} ms.";
-            foreach ( ISymbol symbol in _grammarRules.Symbols.Values )
+            foreach (ISymbol symbol in _grammarRules.SymbolList)
             {
-                if ( symbol.SymbolType == SymbolType.Variable )
-                    listBoxGrammar.Items.Add(( (Variable) symbol ).ShowRules());
+                if (symbol.SymbolType == SymbolType.Variable)
+                    listBoxGrammar.Items.Add(((Variable)symbol).ShowRules());
             }
         }
 
-        private void FrmMain_Load(object sender,EventArgs e)
+        private void FrmMain_Load(object sender, EventArgs e)
         {
         }
 
-        private void TabPreprocess_Enter(object sender,EventArgs e)
+        private void TabPreprocess_Enter(object sender, EventArgs e)
         {
             listBoxFirst.Items.Clear();
             listBoxFollow.Items.Clear();
@@ -75,9 +75,9 @@ namespace Parser
             preprocessor.CalculateAllFollows();
             _stopwatch.Stop();
             lblTime.Text = $"First and follow calculation took {_stopwatch.ElapsedMilliseconds} ms.";
-            foreach ( ISymbol symbol in _grammarRules.Symbols.Values )
+            foreach (ISymbol symbol in _grammarRules.SymbolList)
             {
-                if ( symbol is Variable variable )
+                if (symbol is Variable variable)
                 {
                     listBoxFirst.Items.Add(variable.ShowFirsts());
                     listBoxFollow.Items.Add(variable.ShowFollows());
@@ -85,26 +85,26 @@ namespace Parser
             }
         }
 
-        private async void ll_1_Tab_Enter(object sender,EventArgs e)
+        private async void ll_1_Tab_Enter(object sender, EventArgs e)
         {
             Progress<ParseReportModel> progress = new Progress<ParseReportModel>();
             progress.ProgressChanged += Progress_ProgressChanged;
 
-            var leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules,progress);
+            var leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules, progress);
             leftToRightLookAhead1.Init();
             RestartStopWatch();
 
-            var data =await Task.Run(() => leftToRightLookAhead1.ProcessTable());
+            var data = await Task.Run(() => leftToRightLookAhead1.ProcessTable());
             _stopwatch.Stop();
             lblTime.Text = $"Creating LookAhead Table took {_stopwatch.ElapsedMilliseconds} ms.";
             dataGridViewLL_1.Columns.Clear();
             dataGridViewLL_1.Rows.Clear();
-            foreach ( KeyValuePair<string,int> keyValuePair in leftToRightLookAhead1.MapTerminalToNumber )
+            foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapTerminalToNumber)
             {
-                dataGridViewLL_1.Columns.Add(keyValuePair.Key,keyValuePair.Key);
+                dataGridViewLL_1.Columns.Add(keyValuePair.Key, keyValuePair.Key);
             }
 
-            foreach ( var keyValue in leftToRightLookAhead1.MapVariableToNumber )
+            foreach (var keyValue in leftToRightLookAhead1.MapVariableToNumber)
             {
                 dataGridViewLL_1.Rows.Add(new DataGridViewRow()
                 {
@@ -113,36 +113,36 @@ namespace Parser
             }
 
             bool isValid = true;
-            for ( var i = 0 ;i < leftToRightLookAhead1.VariableCount ;i++ )
+            for (var i = 0; i < leftToRightLookAhead1.VariableCount; i++)
             {
-                for ( var j = 0 ;j < leftToRightLookAhead1.TerminalCount ;j++ )
+                for (var j = 0; j < leftToRightLookAhead1.TerminalCount; j++)
                 {
-                    if ( data [i,j] != null )
+                    if (data[i, j] == null)
                     {
-                        dataGridViewLL_1.Rows [i].Cells [j].Value = string.Join("",data [i,j]);
-                        if ( data [i,j].Contains(Terminal.Error) )
-                        {
-                            dataGridViewLL_1.Rows[i].Cells[j].Style.BackColor = Color.Orange;
-                            isValid = false;
-                        }
-                        else
-                        {
-                            dataGridViewLL_1.Rows[i].Cells[j].Style.BackColor = Color.LightGreen;
-                        }
-
+                        continue;
+                    }
+                    dataGridViewLL_1.Rows[i].Cells[j].Value = string.Join("", data[i, j]);
+                    if (data[i, j].Contains(Terminal.Error))
+                    {
+                        dataGridViewLL_1.Rows[i].Cells[j].Style.BackColor = Color.Orange;
+                        isValid = false;
+                    }
+                    else
+                    {
+                        dataGridViewLL_1.Rows[i].Cells[j].Style.BackColor = Color.LightGreen;
                     }
                 }
             }
-            if(isValid)
-                MessageBox.Show(leftToRightLookAhead1
+            if (isValid)
+                leftToRightLookAhead1
                 .Parse(
                     new LexicalAnalyzer(
-                        File.ReadAllText(txtTestFile.Text)).TokenizeInputText()).ToString());
+                        File.ReadAllText(txtTestFile.Text)).TokenizeInputText()).ToString();
         }
 
-        
 
-        private void Progress_ProgressChanged(object sender,ParseReportModel e)
+
+        private void Progress_ProgressChanged(object sender, ParseReportModel e)
         {
             dataGridViewReport.Rows.Add(e.Stack, e.InputString, e.Output);
         }
@@ -154,7 +154,7 @@ namespace Parser
             _stopwatch.Start();
         }
 
-        private void btnChooseTestFile_Click(object sender,EventArgs e)
+        private void btnChooseTestFile_Click(object sender, EventArgs e)
         {
             ChooseFile(txtTestFile);
         }
