@@ -25,9 +25,9 @@ namespace Parser.Parse
             return FiniteStateMachine.ToString();
         }
         
-        public LLGrammarTable FillTable()
+        public LRGrammarTable FillTable()
         {
-            LLGrammarTable grammarTable = new LLGrammarTable(FiniteStateMachine,MapperToNumber);
+            LRGrammarTable grammarTable = new LRGrammarTable(FiniteStateMachine,MapperToNumber);
             grammarTable.Init(); 
             grammarTable.FillTable(_grammarRules.HeadVariable);
             return grammarTable;

@@ -11,14 +11,14 @@ namespace Parser.State
     /// GoTo
     /// Action
     /// </summary>
-    public class LLGrammarTable
+    public class LRGrammarTable
     {
         private readonly FiniteStateMachine _fsm;
         private readonly MapperToNumber _mapperToNumber;
         public ParserAction[,] ActionTable { get; set; }
         public GoTo[,] GoToTable { get; set; }
 
-        public LLGrammarTable(FiniteStateMachine fsm, MapperToNumber mapperToNumber)
+        public LRGrammarTable(FiniteStateMachine fsm, MapperToNumber mapperToNumber)
         {
             _fsm = fsm;
             _mapperToNumber = mapperToNumber;

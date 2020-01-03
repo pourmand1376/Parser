@@ -68,7 +68,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LLTable\Action.cs" />
-    <Compile Include="LLTable\LLGrammarTable.cs" />
+    <Compile Include="LLTable\LRGrammarTable.cs" />
     <Compile Include="LLTable\ParserAction.cs" />
     <Compile Include="States\FiniteStateMachine.cs" />
     <Compile Include="States\RowState.cs" />
