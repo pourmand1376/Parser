@@ -124,6 +124,13 @@ namespace Parser.State
                             AddParseActionToTable(currentState.StateId, _mapperToNumber.Map(terminal), parser);
                         }
                     }
+                    else if (_lrType == LRType.ClR_One)
+                    {
+                        foreach (Terminal terminal in currentStateRowState.LookAhead)
+                        {
+                            AddParseActionToTable(currentState.StateId,_mapperToNumber.Map(terminal),parser);
+                        }
+                    }
                 }
             }
         }

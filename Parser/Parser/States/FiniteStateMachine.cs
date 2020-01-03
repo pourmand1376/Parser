@@ -2,27 +2,33 @@
 using Parser.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Parser.Parse;
 
 namespace Parser.States
 {
     public class FiniteStateMachine
     {
         private readonly GrammarRules _grammarRules;
+        private readonly bool _isClr;
         public HashSet<State> States { get; }
-
-        public FiniteStateMachine(GrammarRules grammarRules)
+        private Preprocessor _preprocessor;
+        public FiniteStateMachine(GrammarRules grammarRules,Preprocessor preprocessor, bool isClr)
         {
             _grammarRules = grammarRules;
+            _isClr = isClr;
             States = new HashSet<State>();
+            _preprocessor = preprocessor;
         }
         public void InitializeAllStates()
         {
             Queue<State> queue = new Queue<State>();
 
-            State firstState = new State();
+            State firstState = new State(_preprocessor,_isClr);
             foreach (var rule in _grammarRules.HeadVariable.RuleSet.Definitions)
             {
-                firstState.AddRowState(new RowState(_grammarRules.HeadVariable, rule));
+                var rowState = new RowState(_grammarRules.HeadVariable, rule);
+                if(_isClr) rowState.LookAhead = new List<Terminal>(){Terminal.EndOfFile};
+                firstState.AddRowState(rowState);
             }
             firstState.AddClosures();
             queue.Enqueue(firstState);

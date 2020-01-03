@@ -1,6 +1,7 @@
 ﻿using Parser.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Parser.Parse;
 
 namespace Parser.States
 {
@@ -12,6 +13,8 @@ namespace Parser.States
     /// </summary>
     public class State
     {
+        private readonly Preprocessor _preprocessor;
+        private readonly bool _isClr;
         public int StateId { get; set; }
         /// <summary>
         /// only identifier of any state
@@ -22,8 +25,11 @@ namespace Parser.States
         public ISymbol TransferredSymbol { get; set; }
 
         public Dictionary<ISymbol, State> NextStates { get; set; }
-        public State()
+
+        public State(Preprocessor preprocessor,bool isClr = false)
         {
+            _preprocessor = preprocessor;
+            _isClr = isClr;
             RowStates = new HashSet<RowState>();
             NextStates = new Dictionary<ISymbol, State>();
         }
@@ -49,10 +55,17 @@ namespace Parser.States
                 {
                     if (state.GetSymbolInPosition() is Variable variable)
                     {
+                        var defaultLookAhead = state.LookAhead;
+                        if (state.HasSymbolAfterPosition())
+                        {
+                            var symbolsAfterPosition = state.GetSymbolsAfterPosition();
+                            defaultLookAhead=_preprocessor.FirstSet(new List<IEnumerable<ISymbol>> {symbolsAfterPosition});
+                        }
                         variable.RuleSet.Definitions
                             .ForEach(rule =>
                             {
                                 RowState rowState = new RowState(variable, rule);
+                                if(_isClr) rowState = new RowState(variable,rule,defaultLookAhead);
                                 if (!RowStates.Contains(rowState))
                                 {
                                     RowStates.Add(rowState);
@@ -75,7 +88,7 @@ namespace Parser.States
 
         public State CreateNextState(ISymbol symbol)
         {
-            State newstate = new State();
+            State newstate = new State(_preprocessor,_isClr);
             foreach (RowState rowState in RowStates)
             {
                 var symbolInPosition = rowState.GetSymbolInPosition();

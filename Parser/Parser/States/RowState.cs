@@ -2,6 +2,7 @@
 using Parser.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 
 namespace Parser.States
@@ -21,13 +22,21 @@ namespace Parser.States
 
         public IEnumerable<ISymbol> Rule { get; }
 
-        public bool Finished => Position >= Rule.ToList().Count || Rule.First().Equals(Terminal.Epsilon);
+        public bool Finished => Position >= Rule.ToList().Count 
+                                || Rule.First().Equals(Terminal.Epsilon);
+
+        public List<Terminal> LookAhead { get; set; }
 
         public RowState(Variable variable, IEnumerable<ISymbol> rule, int position = 0)
         {
             Variable = variable;
             Rule = rule;
             Position = position;
+        }
+        public RowState(Variable variable, IEnumerable<ISymbol> rule, List<Terminal> lookAhead,int position = 0)
+        :this(variable,rule,position)
+        {
+            LookAhead = lookAhead;
         }
 
         public ISymbol GetSymbolInPosition()
@@ -44,6 +53,25 @@ namespace Parser.States
             return null;
         }
 
+        public bool HasSymbolAfterPosition()
+        {
+            int position = 0;
+            foreach (var symbol in Rule)
+            {
+                if (position == Position+1)
+                {
+                    return true;
+                }
+                position++;
+            }
+            return false;
+        }
+
+        public IEnumerable<ISymbol> GetSymbolsAfterPosition()
+        {
+            return Rule.Skip(Position + 1);
+        }
+
         public void IncrementPosition()
         {
             Position++;
@@ -51,7 +79,7 @@ namespace Parser.States
 
         public RowState Clone()
         {
-            return new RowState(Variable,Rule,Position);
+            return new RowState(Variable,Rule,LookAhead,Position);
         }
 
         public override bool Equals(object obj)
@@ -60,7 +88,8 @@ namespace Parser.States
             {
                 if (rowState.Variable.Equals(Variable) && rowState.Position == this.Position)
                 {
-                    return Rule.ToList().SequenceEqual(rowState.Rule);
+                    return Rule.ToList().SequenceEqual(rowState.Rule) &&
+                        (LookAhead?.SequenceEqual(rowState.LookAhead)??true);
                 }
             }
             return false;
@@ -74,7 +103,16 @@ namespace Parser.States
             foreach (ISymbol symbol in Rule)
             {
                 hash = (hash * 17) + symbol.GetHashCode();
-            } 
+            }
+
+            if (LookAhead != null)
+            {
+                foreach (Terminal terminal in LookAhead)
+                {
+                    hash = (hash * 5) + terminal.GetHashCode();
+                }
+            }
+
             return hash;
         }
 
@@ -94,6 +132,11 @@ namespace Parser.States
                 position++;
             }
             if(!printed) stringBuilder.Append(" ☺ ");
+
+            if (LookAhead?.Count > 0)
+            {
+                stringBuilder.Append($",[{string.Join("", LookAhead)}]");
+            }
             return $"{Variable} ::= {stringBuilder}";
         }
     }

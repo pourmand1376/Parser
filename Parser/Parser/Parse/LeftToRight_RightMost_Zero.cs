@@ -15,17 +15,19 @@ namespace Parser.Parse
     {
         private readonly GrammarRules _grammarRules;
         private readonly LRType _lrType;
+        private readonly Preprocessor _preprocessor;
         private LRGrammarTable _grammarTable;
         public FiniteStateMachine FiniteStateMachine { get; }
 
         public  MapperToNumber MapperToNumber { get;  }
 
-        public LeftToRight_RightMost_Zero(GrammarRules grammarRules,LRType lrType)
+        public LeftToRight_RightMost_Zero(GrammarRules grammarRules,LRType lrType,Preprocessor preprocessor)
         {
             _grammarRules = grammarRules;
             _lrType = lrType;
+            _preprocessor = preprocessor;
             MapperToNumber = new MapperToNumber(_grammarRules);
-            FiniteStateMachine = new FiniteStateMachine(_grammarRules);
+            FiniteStateMachine = new FiniteStateMachine(_grammarRules,_preprocessor,lrType==LRType.ClR_One);
         }
 
         public string CalculateStateMachine()

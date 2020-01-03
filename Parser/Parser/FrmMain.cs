@@ -18,6 +18,7 @@ namespace Parser
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private GrammarRules _grammarRules;
+        private Preprocessor _preprocessor;
 
         public FrmMain()
         {
@@ -75,10 +76,10 @@ namespace Parser
             listBoxFirst.Items.Clear();
             listBoxFollow.Items.Clear();
 
-            Preprocessor preprocessor = new Preprocessor(_grammarRules);
+            _preprocessor = new Preprocessor(_grammarRules);
             RestartStopWatch();
-            preprocessor.CalculateAllFirsts();
-            preprocessor.CalculateAllFollows();
+            _preprocessor.CalculateAllFirsts();
+            _preprocessor.CalculateAllFollows();
             _stopwatch.Stop();
             lblTime.Text = $"First and follow calculation took {_stopwatch.ElapsedMilliseconds} ms.";
             foreach (ISymbol symbol in _grammarRules.SymbolList)
@@ -179,7 +180,7 @@ namespace Parser
             dgvLR_0.Columns.Clear();
 
             LRType lrType = (LRType) cmbGrammarType.SelectedIndex;
-            LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules,lrType);
+            LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules,lrType,_preprocessor);
             txtLRStates.Text=Lr_zero.CalculateStateMachine();
 
             var grammarTable = Lr_zero.FillTable();
