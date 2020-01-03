@@ -1,8 +1,7 @@
 ﻿using Parser.Lexical;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
 using Parser.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Parser.States
 {
@@ -23,47 +22,45 @@ namespace Parser.States
             State firstState = new State();
             foreach (var rule in _grammarRules.HeadVariable.RuleSet.Definitions)
             {
-                firstState.AddRowState(new RowState(_grammarRules.HeadVariable,rule));
+                firstState.AddRowState(new RowState(_grammarRules.HeadVariable, rule));
             }
             firstState.AddClosures();
             queue.Enqueue(firstState);
-            int stateNo = 0;
+            States.Add(firstState);
+            int stateNo = 1;
             while (queue.Count > 0)
             {
                 var state = queue.Dequeue();
-                if (States.Contains(state))
-                {
-                    continue;
-                }
-
-                state.StateId = stateNo++;
-                States.Add(state);
-                //if it's not the first State
-                if (state.PreviousState != null)
-                {
-                    if (!state.PreviousState.NextStates.ContainsKey(state.TransferredSymbol))
-                    {
-                        state.PreviousState.NextStates.Add(state.TransferredSymbol,state);
-                    }
-                }
-
+                
                 //producing new items
                 var extractFirstSymbol = state.ExtractFirstSymbol().Distinct();
                 foreach (ISymbol symbol in extractFirstSymbol)
                 {
                     var nextState = state.CreateNextState(symbol);
+                    nextState.AddClosures();
                     if (nextState.RowStates.Count > 0)
                     {
                         nextState.PreviousState = state;
                         nextState.TransferredSymbol = symbol;
-                        nextState.AddClosures();
 
                         //It's right not to add the state
-                        if(!States.Contains(nextState))
+                        if (!States.Contains(nextState))
+                        {
                             queue.Enqueue(nextState);
+                            nextState.StateId = stateNo;
+                            stateNo++;
+                            States.Add(nextState);
+
+                            //if it's not the first State
+                            if (!state.NextStates.ContainsKey(symbol))
+                            {
+                                state.NextStates.Add(symbol, nextState);
+                            }
+
+                        }
                         else
                         {//but we should add next state to know where to go
-                            state.NextStates.Add(symbol,States.First(f=>f.Equals(nextState)));
+                            state.NextStates.Add(symbol, States.First(f => f.Equals(nextState)));
                         }
                     }
                 }

@@ -13,6 +13,9 @@ namespace Parser.States
     public class State
     {
         public int StateId { get; set; }
+        /// <summary>
+        /// only identifier of any state
+        /// </summary>
         public HashSet<RowState> RowStates { get; }
 
         public State PreviousState { get; set; }

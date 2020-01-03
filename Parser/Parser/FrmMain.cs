@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Action = Parser.State.Action;
 
 namespace Parser
 {
@@ -194,9 +195,21 @@ namespace Parser
             {
                 for (int j = 0; j < Lr_zero.MapperToNumber.TerminalCount; j++)
                 {
-                    dgvLR_0.Rows[state.StateId].Cells[j].Value = grammarTable.ActionTable[state.StateId, j];
+                    var parserAction = grammarTable.ActionTable[state.StateId, j];
+                    if(parserAction==null) continue;
+                    dgvLR_0.Rows[state.StateId].Cells[j].Value = parserAction;
+                    dgvLR_0.Rows[state.StateId].Cells[j].Style.BackColor = !parserAction.HasError? Color.LightGreen: Color.Orange;
+                }
+
+                int terminalCount = Lr_zero.MapperToNumber.TerminalCount;
+                for (int j = 0; j < Lr_zero.MapperToNumber.VariableCount; j++)
+                {
+                    if(grammarTable.GoToTable[state.StateId, j]==null) continue;
+                    dgvLR_0.Rows[state.StateId].Cells[j+terminalCount-1].Value = grammarTable.GoToTable[state.StateId, j].StateId;
+                    dgvLR_0.Rows[state.StateId].Cells[j+terminalCount-1].Style.BackColor = Color.LightGreen;
                 }
             }
+            
             
         }
 

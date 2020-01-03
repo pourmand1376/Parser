@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Parser.Models;
+using Parser.States;
 
 namespace Parser.State
 {
@@ -29,6 +31,27 @@ namespace Parser.State
         /// </summary>
         public Variable Variable { get; set; }
 
+        /// <summary>
+        /// if it has error 
+        /// </summary>
+        public ParserAction ErrorAction { get; set; }
+
+        public bool HasError => ErrorAction != null;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ParserAction parserAction)
+            {
+                if (Action == parserAction.Action && ShiftState == parserAction.ShiftState
+                                                  && Variable == parserAction.Variable)
+                {
+                    return Handle.ToList().SequenceEqual(parserAction.Handle);
+                }
+            }
+
+            return false;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -47,7 +70,12 @@ namespace Parser.State
                 sb.Append("Acc");
             }
 
+            if (HasError)
+            {
+                sb.Append("|"+ErrorAction);
+            }
             return sb.ToString();
         }
+
     }
 }

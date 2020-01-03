@@ -52,6 +52,7 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="LLTable\GoTo.cs" />
     <Compile Include="Models\GrammarRules.cs" />
     <Compile Include="Lexical\LexicalAnalyzer.cs" />
     <Compile Include="Models\ISymbol.cs" />

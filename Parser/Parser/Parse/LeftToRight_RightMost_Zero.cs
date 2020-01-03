@@ -29,7 +29,7 @@ namespace Parser.Parse
         {
             LLGrammarTable grammarTable = new LLGrammarTable(FiniteStateMachine,MapperToNumber);
             grammarTable.Init(); 
-            grammarTable.FillTable();
+            grammarTable.FillTable(_grammarRules.HeadVariable);
             return grammarTable;
         }
     }

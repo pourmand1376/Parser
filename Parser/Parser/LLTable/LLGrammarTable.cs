@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Parser.Models;
+﻿using Parser.Models;
 using Parser.Parse;
 using Parser.States;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Parser.State
 {
@@ -16,9 +16,9 @@ namespace Parser.State
         private readonly FiniteStateMachine _fsm;
         private readonly MapperToNumber _mapperToNumber;
         public ParserAction[,] ActionTable { get; set; }
-        public int[,] GoToTable { get; set; }
+        public GoTo[,] GoToTable { get; set; }
 
-        public LLGrammarTable(FiniteStateMachine fsm,MapperToNumber mapperToNumber)
+        public LLGrammarTable(FiniteStateMachine fsm, MapperToNumber mapperToNumber)
         {
             _fsm = fsm;
             _mapperToNumber = mapperToNumber;
@@ -27,26 +27,46 @@ namespace Parser.State
         public void Init()
         {
             ActionTable = new ParserAction[_fsm.States.Count, _mapperToNumber.TerminalCount];
-            GoToTable = new int[_fsm.States.Count, _mapperToNumber.VariableCount];
+            GoToTable = new GoTo[_fsm.States.Count, _mapperToNumber.VariableCount];
         }
 
-        public void FillTable()
+        public void AddParseActionToTable(int row,int cell,ParserAction parserAction)
         {
+            if (ActionTable[row, cell] == null)
+                ActionTable[row, cell] = parserAction;
+            else
+            {
+                var action = ActionTable [row,cell];
+                if(!action.Equals(parserAction))
+                    action.ErrorAction = parserAction;
+            }
+        }
+        public void FillTable(Variable head)
+        {
+            ParserAction parser = new ParserAction();
             foreach (States.State currentState in _fsm.States)
             {
-                //reduce
-                if (!currentState.NextStates.Any())
+                foreach (RowState currentStateRowState in currentState.RowStates)
                 {
-                    ParserAction parser = new ParserAction();
-                    parser.Action = Action.Reduce;
-                    parser.Variable = currentState.RowStates.First().Variable;
-                    parser.Handle = currentState.RowStates.First().Rule;
-                    for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
+                    //if some rule is finished it means reduce or accept
+                    if (currentStateRowState.Finished)
                     {
-                        ActionTable[currentState.StateId, i] = parser;
+                        if (currentStateRowState.Variable.Equals(head))
+                        {
+                            parser.Action = Action.Accept;
+                            AddParseActionToTable(currentState.StateId,_mapperToNumber.Map(Terminal.EndOfFile),parser);
+                        }
+                        else
+                        {
+                            parser.Action = Action.Reduce;
+                            parser.Variable = currentStateRowState.Variable;
+                            parser.Handle = currentStateRowState.Rule;
+                            for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
+                            {
+                                AddParseActionToTable(currentState.StateId, i, parser);
+                            }
+                        }
                     }
-                    
-                    continue;
                 }
                 foreach (KeyValuePair<ISymbol, States.State> fsmStateNextState in currentState.NextStates)
                 {
@@ -55,15 +75,16 @@ namespace Parser.State
                     {
                         ParserAction action = new ParserAction
                         {
-                            ShiftState = fsmStateNextState.Value.StateId, Action = Action.Shift
+                            ShiftState = fsmStateNextState.Value.StateId,
+                            Action = Action.Shift
                         };
-                        ActionTable[currentState.StateId, _mapperToNumber.Map(terminal)] =
-                            action;
+                        AddParseActionToTable(currentState.StateId, _mapperToNumber.Map(terminal),action);
                     }
+                    //goto
                     else if (fsmStateNextState.Key is Variable variable)
                     {
                         GoToTable[currentState.StateId, _mapperToNumber.Map(variable)] =
-                            fsmStateNextState.Value.StateId;
+                            new GoTo(fsmStateNextState.Value.StateId);
                     }
                 }
             }
