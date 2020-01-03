@@ -116,6 +116,13 @@ namespace Parser.Parse
                                 else stack.Push(reversed.Pop());
                     }
                 }
+                else
+                {
+                    parseReport.Stack = string.Join("", stack.ToArray().Reverse());
+                    parseReport.Output = "I Could parse this string";
+                    _progress.Report(parseReport);
+                    return false;
+                }
 
                 parseReport.Stack = string.Join("", stack.ToArray().Reverse());
                 _progress.Report(parseReport);
