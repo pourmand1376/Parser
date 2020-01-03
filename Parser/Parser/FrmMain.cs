@@ -51,6 +51,11 @@ namespace Parser
         {
             listBoxGrammar.Items.Clear();
             listBoxFirst.Items.Clear();
+            if (string.IsNullOrEmpty(txtgrammarFile.Text))
+            {
+                MessageBox.Show("Grammar file is empty!");
+                return;
+            }
             var text = File.ReadAllText(txtgrammarFile.Text);
             LexicalAnalyzer lex = new LexicalAnalyzer(text);
             RestartStopWatch();
@@ -75,7 +80,11 @@ namespace Parser
         {
             listBoxFirst.Items.Clear();
             listBoxFollow.Items.Clear();
-
+            if (_grammarRules == null)
+            {
+                MessageBox.Show("Grammar File is empty");
+                return;
+            }
             _preprocessor = new Preprocessor(_grammarRules);
             RestartStopWatch();
             _preprocessor.CalculateAllFirsts();
@@ -96,7 +105,11 @@ namespace Parser
         {
             Progress<ParseReportModel> progress = new Progress<ParseReportModel>();
             progress.ProgressChanged += Progress_ProgressChanged;
-
+            if (_grammarRules == null)
+            {
+                MessageBox.Show("Grammer file is empty");
+                return;
+            }
             var leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules, progress);
             
             leftToRightLookAhead1.Init();
@@ -104,7 +117,8 @@ namespace Parser
 
             var data = await Task.Run(() => leftToRightLookAhead1.ProcessTable());
             _stopwatch.Stop();
-            lblTime.Text = $"Creating LookAhead Table took {_stopwatch.ElapsedMilliseconds} ms.";
+            var creatingTableTime = _stopwatch.ElapsedMilliseconds;
+            
             dataGridViewLL_1.Columns.Clear();
             dataGridViewLL_1.Rows.Clear();
             foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapperToNumber.MapTerminalToNumber)
@@ -141,12 +155,27 @@ namespace Parser
                     }
                 }
             }
+
+            long calculatingString = 0;
             if (isValid)
-                leftToRightLookAhead1.Parse(GetTerminals()).ToString();
+            {
+                var terminals = GetTerminals();
+                if (terminals == null)
+                {
+                    MessageBox.Show("test file is empty!");
+                    return;
+                }
+                RestartStopWatch();
+                leftToRightLookAhead1.Parse(terminals);
+                _stopwatch.Stop();
+                calculatingString = _stopwatch.ElapsedMilliseconds;
+            }
+            lblTime.Text = $"Creating LookAhead Table took {creatingTableTime} ms. Stack Calculation took {calculatingString} ms.";
         }
 
         private List<Terminal> GetTerminals()
         {
+            if (string.IsNullOrWhiteSpace(txtTestFile.Text)) return null;
             return new LexicalAnalyzer(
                 File.ReadAllText(txtTestFile.Text)).TokenizeInputText();
         }
@@ -179,11 +208,22 @@ namespace Parser
             dgvLR_0.Rows.Clear();
             dgvLR_0.Columns.Clear();
 
+            if (_preprocessor == null)
+            {
+                TabPreprocess_Enter(null,null);
+                if (_preprocessor == null)
+                {
+                    return;
+                }
+            }
+
             LRType lrType = (LRType) cmbGrammarType.SelectedIndex;
             LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules,lrType,_preprocessor);
+            RestartStopWatch();
             txtLRStates.Text=Lr_zero.CalculateStateMachine();
-
             var grammarTable = Lr_zero.FillTable();
+            _stopwatch.Stop();
+            var tableAndStateMachine = _stopwatch.ElapsedMilliseconds;
             foreach(var keyValuePair in Lr_zero.MapperToNumber.MapTerminalToNumber)
             {
                 dgvLR_0.Columns.Add(keyValuePair.Key, keyValuePair.Key);
@@ -225,9 +265,22 @@ namespace Parser
             {
                 dataGridReportLR.Rows.Add(m.Stack, m.InputString, m.Output);
             };
-            if(valid)
-              Lr_zero.Parse(GetTerminals(),progress);
 
+            long stackTime = 0;
+            if(valid)
+            {
+                var terminals = GetTerminals();
+                if (terminals == null)
+                {
+                    MessageBox.Show("Terminal is empty!");
+                    return;
+                }
+                RestartStopWatch();
+                Lr_zero.Parse(terminals,progress);
+                _stopwatch.Stop();
+                stackTime = _stopwatch.ElapsedMilliseconds;
+            }
+            lblTime.Text = $"Creating LR Table took {tableAndStateMachine} ms. Stack Calculation took {stackTime} ms.";
         }
 
         private void tabLR_0_Click(object sender, EventArgs e)
@@ -238,6 +291,22 @@ namespace Parser
         private void cmbGrammarType_SelectedIndexChanged(object sender, EventArgs e)
         {
             tabLR_0_Enter(null,null);
+        }
+
+        private void tabPage1_Leave(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void tabItem_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+//            if (e.TabPageIndex == 0)
+//            {
+//                if (string.IsNullOrWhiteSpace(txtgrammarFile.Text.Trim()))
+//                {
+//                    e.Cancel = true;
+//                }
+//            }
         }
     }
 }

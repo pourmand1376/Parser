@@ -50,6 +50,7 @@
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewLL_1 = new System.Windows.Forms.DataGridView();
             this.tabLR_0 = new System.Windows.Forms.TabPage();
+            this.cmbGrammarType = new System.Windows.Forms.ComboBox();
             this.dataGridReportLR = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,7 +58,6 @@
             this.dgvLR_0 = new System.Windows.Forms.DataGridView();
             this.txtLRStates = new System.Windows.Forms.RichTextBox();
             this.lblTime = new System.Windows.Forms.Label();
-            this.cmbGrammarType = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -72,6 +72,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.btnChooseTestFile);
             this.groupBox1.Controls.Add(this.txtTestFile);
             this.groupBox1.Controls.Add(this.label4);
@@ -141,6 +143,9 @@
             // 
             // tabItem
             // 
+            this.tabItem.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabItem.Controls.Add(this.tabPage1);
             this.tabItem.Controls.Add(this.tabPreprocess);
             this.tabItem.Controls.Add(this.ll_1_Tab);
@@ -150,6 +155,7 @@
             this.tabItem.SelectedIndex = 0;
             this.tabItem.Size = new System.Drawing.Size(648, 461);
             this.tabItem.TabIndex = 3;
+            this.tabItem.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabItem_Selecting);
             this.tabItem.Enter += new System.EventHandler(this.tabItem_Enter);
             // 
             // tabPage1
@@ -163,9 +169,13 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scanning Phase";
             this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage1.Leave += new System.EventHandler(this.tabPage1_Leave);
             // 
             // listBoxGrammar
             // 
+            this.listBoxGrammar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxGrammar.FormattingEnabled = true;
             this.listBoxGrammar.Location = new System.Drawing.Point(6, 90);
             this.listBoxGrammar.Name = "listBoxGrammar";
@@ -207,6 +217,9 @@
             // 
             // listBoxFollow
             // 
+            this.listBoxFollow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxFollow.FormattingEnabled = true;
             this.listBoxFollow.Location = new System.Drawing.Point(327, 65);
             this.listBoxFollow.Name = "listBoxFollow";
@@ -215,6 +228,9 @@
             // 
             // listBoxFirst
             // 
+            this.listBoxFirst.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxFirst.FormattingEnabled = true;
             this.listBoxFirst.Location = new System.Drawing.Point(6, 64);
             this.listBoxFirst.Name = "listBoxFirst";
@@ -238,6 +254,9 @@
             // 
             this.dataGridViewReport.AllowUserToAddRows = false;
             this.dataGridViewReport.AllowUserToDeleteRows = false;
+            this.dataGridViewReport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Stack,
@@ -275,8 +294,7 @@
             // 
             this.dataGridViewLL_1.AllowUserToAddRows = false;
             this.dataGridViewLL_1.AllowUserToDeleteRows = false;
-            this.dataGridViewLL_1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dataGridViewLL_1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewLL_1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewLL_1.Location = new System.Drawing.Point(6, 6);
@@ -302,10 +320,27 @@
             this.tabLR_0.Click += new System.EventHandler(this.tabLR_0_Click);
             this.tabLR_0.Enter += new System.EventHandler(this.tabLR_0_Enter);
             // 
+            // cmbGrammarType
+            // 
+            this.cmbGrammarType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGrammarType.FormattingEnabled = true;
+            this.cmbGrammarType.Items.AddRange(new object[] {
+            "LR(0)",
+            "SLR(1)",
+            "CLR(1)"});
+            this.cmbGrammarType.Location = new System.Drawing.Point(6, 6);
+            this.cmbGrammarType.Name = "cmbGrammarType";
+            this.cmbGrammarType.Size = new System.Drawing.Size(185, 21);
+            this.cmbGrammarType.TabIndex = 4;
+            this.cmbGrammarType.SelectedIndexChanged += new System.EventHandler(this.cmbGrammarType_SelectedIndexChanged);
+            // 
             // dataGridReportLR
             // 
             this.dataGridReportLR.AllowUserToAddRows = false;
             this.dataGridReportLR.AllowUserToDeleteRows = false;
+            this.dataGridReportLR.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridReportLR.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridReportLR.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
@@ -343,8 +378,7 @@
             // 
             this.dgvLR_0.AllowUserToAddRows = false;
             this.dgvLR_0.AllowUserToDeleteRows = false;
-            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvLR_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvLR_0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -357,6 +391,8 @@
             // 
             // txtLRStates
             // 
+            this.txtLRStates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.txtLRStates.Location = new System.Drawing.Point(6, 29);
             this.txtLRStates.Name = "txtLRStates";
             this.txtLRStates.Size = new System.Drawing.Size(185, 400);
@@ -365,26 +401,13 @@
             // 
             // lblTime
             // 
+            this.lblTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTime.AutoSize = true;
             this.lblTime.Location = new System.Drawing.Point(13, 474);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(35, 13);
             this.lblTime.TabIndex = 4;
             this.lblTime.Text = "label4";
-            // 
-            // cmbGrammarType
-            // 
-            this.cmbGrammarType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGrammarType.FormattingEnabled = true;
-            this.cmbGrammarType.Items.AddRange(new object[] {
-            "LR(0)",
-            "SLR(1)",
-            "CLR(1)"});
-            this.cmbGrammarType.Location = new System.Drawing.Point(6, 6);
-            this.cmbGrammarType.Name = "cmbGrammarType";
-            this.cmbGrammarType.Size = new System.Drawing.Size(185, 21);
-            this.cmbGrammarType.TabIndex = 4;
-            this.cmbGrammarType.SelectedIndexChanged += new System.EventHandler(this.cmbGrammarType_SelectedIndexChanged);
             // 
             // FrmMain
             // 
