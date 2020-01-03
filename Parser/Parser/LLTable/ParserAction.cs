@@ -59,8 +59,9 @@ namespace Parser.State
             if (Action == Action.Reduce)
             {
                 sb.Append("R");
-                sb.Append("-" + Variable.Value);
-                sb.Append("-> " + string.Join("", Handle));
+                sb.Append(" ( " + Variable.Value);
+                //My Wife insisted to add this line to see what reduction we should do.
+                sb.Append("-->" + string.Join("", Handle)+" ) ");
             }
             else if(Action==Action.Shift)
             {
