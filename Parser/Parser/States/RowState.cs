@@ -21,7 +21,7 @@ namespace Parser.States
 
         public IEnumerable<ISymbol> Rule { get; }
 
-        public bool Finished => Position >= Rule.ToList().Count;
+        public bool Finished => Position >= Rule.ToList().Count || Rule.First().Equals(Terminal.Epsilon);
 
         public RowState(Variable variable, IEnumerable<ISymbol> rule, int position = 0)
         {

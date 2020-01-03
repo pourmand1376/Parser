@@ -50,11 +50,15 @@
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewLL_1 = new System.Windows.Forms.DataGridView();
             this.tabLR_0 = new System.Windows.Forms.TabPage();
+            this.dgvLR_0 = new System.Windows.Forms.DataGridView();
             this.txtLRStates = new System.Windows.Forms.RichTextBox();
             this.tab_SLR = new System.Windows.Forms.TabPage();
             this.tab_Clr_1 = new System.Windows.Forms.TabPage();
             this.lblTime = new System.Windows.Forms.Label();
-            this.dgvLR_0 = new System.Windows.Forms.DataGridView();
+            this.dataGridReportLR = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -64,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).BeginInit();
             this.tabLR_0.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridReportLR)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -234,6 +239,8 @@
             // 
             // dataGridViewReport
             // 
+            this.dataGridViewReport.AllowUserToAddRows = false;
+            this.dataGridViewReport.AllowUserToDeleteRows = false;
             this.dataGridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Stack,
@@ -241,6 +248,7 @@
             this.Result});
             this.dataGridViewReport.Location = new System.Drawing.Point(6, 182);
             this.dataGridViewReport.Name = "dataGridViewReport";
+            this.dataGridViewReport.ReadOnly = true;
             this.dataGridViewReport.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridViewReport.Size = new System.Drawing.Size(628, 247);
             this.dataGridViewReport.TabIndex = 2;
@@ -250,33 +258,40 @@
             this.Stack.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Stack.HeaderText = "Stack";
             this.Stack.Name = "Stack";
+            this.Stack.ReadOnly = true;
             // 
             // InputText
             // 
             this.InputText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.InputText.HeaderText = "InputText";
             this.InputText.Name = "InputText";
+            this.InputText.ReadOnly = true;
             // 
             // Result
             // 
             this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Result.HeaderText = "Result";
             this.Result.Name = "Result";
+            this.Result.ReadOnly = true;
             // 
             // dataGridViewLL_1
             // 
+            this.dataGridViewLL_1.AllowUserToAddRows = false;
+            this.dataGridViewLL_1.AllowUserToDeleteRows = false;
             this.dataGridViewLL_1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewLL_1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewLL_1.Location = new System.Drawing.Point(6, 6);
             this.dataGridViewLL_1.Name = "dataGridViewLL_1";
+            this.dataGridViewLL_1.ReadOnly = true;
             this.dataGridViewLL_1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridViewLL_1.Size = new System.Drawing.Size(628, 170);
             this.dataGridViewLL_1.TabIndex = 1;
             // 
             // tabLR_0
             // 
+            this.tabLR_0.Controls.Add(this.dataGridReportLR);
             this.tabLR_0.Controls.Add(this.dgvLR_0);
             this.tabLR_0.Controls.Add(this.txtLRStates);
             this.tabLR_0.Location = new System.Drawing.Point(4, 22);
@@ -288,6 +303,22 @@
             this.tabLR_0.UseVisualStyleBackColor = true;
             this.tabLR_0.Click += new System.EventHandler(this.tabLR_0_Click);
             this.tabLR_0.Enter += new System.EventHandler(this.tabLR_0_Enter);
+            // 
+            // dgvLR_0
+            // 
+            this.dgvLR_0.AllowUserToAddRows = false;
+            this.dgvLR_0.AllowUserToDeleteRows = false;
+            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvLR_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvLR_0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLR_0.Location = new System.Drawing.Point(197, 6);
+            this.dgvLR_0.Name = "dgvLR_0";
+            this.dgvLR_0.ReadOnly = true;
+            this.dgvLR_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvLR_0.Size = new System.Drawing.Size(437, 200);
+            this.dgvLR_0.TabIndex = 2;
             // 
             // txtLRStates
             // 
@@ -326,18 +357,42 @@
             this.lblTime.TabIndex = 4;
             this.lblTime.Text = "label4";
             // 
-            // dgvLR_0
+            // dataGridReportLR
             // 
-            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvLR_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvLR_0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLR_0.Location = new System.Drawing.Point(197, 6);
-            this.dgvLR_0.Name = "dgvLR_0";
-            this.dgvLR_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvLR_0.Size = new System.Drawing.Size(437, 200);
-            this.dgvLR_0.TabIndex = 2;
+            this.dataGridReportLR.AllowUserToAddRows = false;
+            this.dataGridReportLR.AllowUserToDeleteRows = false;
+            this.dataGridReportLR.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridReportLR.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3});
+            this.dataGridReportLR.Location = new System.Drawing.Point(197, 212);
+            this.dataGridReportLR.Name = "dataGridReportLR";
+            this.dataGridReportLR.ReadOnly = true;
+            this.dataGridReportLR.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridReportLR.Size = new System.Drawing.Size(437, 217);
+            this.dataGridReportLR.TabIndex = 3;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Stack";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.HeaderText = "InputText";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Result";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
             // FrmMain
             // 
@@ -361,6 +416,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).EndInit();
             this.tabLR_0.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridReportLR)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -395,6 +451,10 @@
         private System.Windows.Forms.TabPage tab_Clr_1;
         private System.Windows.Forms.RichTextBox txtLRStates;
         private System.Windows.Forms.DataGridView dgvLR_0;
+        private System.Windows.Forms.DataGridView dataGridReportLR;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
     }
 }
 

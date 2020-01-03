@@ -30,61 +30,85 @@ namespace Parser.State
             GoToTable = new GoTo[_fsm.States.Count, _mapperToNumber.VariableCount];
         }
 
+        public ParserAction GetParserAction(int state, Terminal terminal)
+        {
+            return ActionTable[state, _mapperToNumber.Map(terminal)];
+        }
+
+        public GoTo GetGoTo(int state,Variable variable)
+        {
+            return GoToTable[state, _mapperToNumber.Map(variable)];
+        }
+
         public void AddParseActionToTable(int row,int cell,ParserAction parserAction)
         {
             if (ActionTable[row, cell] == null)
                 ActionTable[row, cell] = parserAction;
             else
             {
-                var action = ActionTable [row,cell];
-                if(!action.Equals(parserAction))
-                    action.ErrorAction = parserAction;
+                if(!ActionTable[row,cell].Equals(parserAction))
+                    ActionTable[row, cell].ErrorAction = parserAction;
             }
         }
         public void FillTable(Variable head)
         {
-            ParserAction parser = new ParserAction();
+            
             foreach (States.State currentState in _fsm.States)
             {
-                foreach (RowState currentStateRowState in currentState.RowStates)
+                AddState(head, currentState);
+            }
+        }
+
+        private void AddState(Variable head, States.State currentState)
+        {
+            AddReduceAccept(head, currentState);
+            AddShiftGo(currentState);
+        }
+
+        private void AddShiftGo(States.State currentState)
+        {
+            foreach (KeyValuePair<ISymbol, States.State> fsmStateNextState in currentState.NextStates)
+            {
+                //shift
+                if (fsmStateNextState.Key is Terminal terminal)
                 {
-                    //if some rule is finished it means reduce or accept
-                    if (currentStateRowState.Finished)
+                    ParserAction action = new ParserAction
                     {
-                        if (currentStateRowState.Variable.Equals(head))
-                        {
-                            parser.Action = Action.Accept;
-                            AddParseActionToTable(currentState.StateId,_mapperToNumber.Map(Terminal.EndOfFile),parser);
-                        }
-                        else
-                        {
-                            parser.Action = Action.Reduce;
-                            parser.Variable = currentStateRowState.Variable;
-                            parser.Handle = currentStateRowState.Rule;
-                            for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
-                            {
-                                AddParseActionToTable(currentState.StateId, i, parser);
-                            }
-                        }
-                    }
+                        ShiftState = fsmStateNextState.Value.StateId,
+                        Action = Action.Shift
+                    };
+                    AddParseActionToTable(currentState.StateId, _mapperToNumber.Map(terminal), action);
                 }
-                foreach (KeyValuePair<ISymbol, States.State> fsmStateNextState in currentState.NextStates)
+                //goto
+                else if (fsmStateNextState.Key is Variable variable)
                 {
-                    //shift
-                    if (fsmStateNextState.Key is Terminal terminal)
+                    GoToTable[currentState.StateId, _mapperToNumber.Map(variable)] =
+                        new GoTo(fsmStateNextState.Value.StateId);
+                }
+            }
+        }
+
+        private void AddReduceAccept(Variable head, States.State currentState)
+        {
+            foreach (RowState currentStateRowState in currentState.RowStates)
+            {
+                ParserAction parser = new ParserAction();
+                //if some rule is finished it means reduce or accept
+                if (!currentStateRowState.Finished) continue;
+
+                if (currentStateRowState.Variable.Equals(head))
+                {
+                    parser.Action = Action.Accept;
+                    AddParseActionToTable(currentState.StateId, _mapperToNumber.Map(Terminal.EndOfFile), parser);
+                }
+                else
+                {
+                    parser.Action = Action.Reduce;
+                    parser.Variable = currentStateRowState.Variable;
+                    parser.Handle = currentStateRowState.Rule;
+                    for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
                     {
-                        ParserAction action = new ParserAction
-                        {
-                            ShiftState = fsmStateNextState.Value.StateId,
-                            Action = Action.Shift
-                        };
-                        AddParseActionToTable(currentState.StateId, _mapperToNumber.Map(terminal),action);
-                    }
-                    //goto
-                    else if (fsmStateNextState.Key is Variable variable)
-                    {
-                        GoToTable[currentState.StateId, _mapperToNumber.Map(variable)] =
-                            new GoTo(fsmStateNextState.Value.StateId);
+                        AddParseActionToTable(currentState.StateId, i, parser);
                     }
                 }
             }

@@ -42,10 +42,11 @@ namespace Parser.State
         {
             if (obj is ParserAction parserAction)
             {
-                if (Action == parserAction.Action && ShiftState == parserAction.ShiftState
-                                                  && Variable == parserAction.Variable)
+                if(Action.Equals(parserAction.Action) && 
+                    ShiftState.Equals( parserAction.ShiftState) && 
+                    (Variable?.Equals( parserAction.Variable) ?? false))
                 {
-                    return Handle.ToList().SequenceEqual(parserAction.Handle);
+                    return Handle?.ToList().SequenceEqual(parserAction.Handle) ?? false;
                 }
             }
 
@@ -72,7 +73,7 @@ namespace Parser.State
 
             if (HasError)
             {
-                sb.Append("|"+ErrorAction);
+                sb.Append(" | "+ErrorAction);
             }
             return sb.ToString();
         }

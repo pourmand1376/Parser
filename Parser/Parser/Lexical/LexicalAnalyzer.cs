@@ -44,10 +44,16 @@ namespace Parser
         {
             var lines = Data.Split('\n');
 
-            return (from line in lines
+            return AddEndSymbol((from line in lines
                 .Where(s => !string.IsNullOrEmpty(s)) 
                 from item in line.Split(' ') 
-                select new Terminal(item)).ToList();
+                select new Terminal(item)).ToList());
+        }
+
+        public List<Terminal> AddEndSymbol(List<Terminal> terminals)
+        {
+            terminals.Add(Terminal.EndOfFile);
+            return terminals;
         }
 
         private void LineTokenExtractor(string line)

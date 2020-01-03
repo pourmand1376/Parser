@@ -136,12 +136,14 @@ namespace Parser
                 }
             }
             if (isValid)
-                leftToRightLookAhead1
-                .Parse(
-                    new LexicalAnalyzer(
-                        File.ReadAllText(txtTestFile.Text)).TokenizeInputText()).ToString();
+                leftToRightLookAhead1.Parse(GetTerminals()).ToString();
         }
 
+        private List<Terminal> GetTerminals()
+        {
+            return new LexicalAnalyzer(
+                File.ReadAllText(txtTestFile.Text)).TokenizeInputText();
+        }
 
 
         private void Progress_ProgressChanged(object sender, ParseReportModel e)
@@ -209,8 +211,14 @@ namespace Parser
                     dgvLR_0.Rows[state.StateId].Cells[j+terminalCount-1].Style.BackColor = Color.LightGreen;
                 }
             }
-            
-            
+            Progress<ParseReportModel> progress = new Progress<ParseReportModel>();
+            progress.ProgressChanged += (o, m) =>
+            {
+                dataGridReportLR.Rows.Add(m.Stack, m.InputString, m.Output);
+            };
+
+            Lr_zero.Parse(GetTerminals(),progress);
+
         }
 
         private void tabLR_0_Click(object sender, EventArgs e)

@@ -71,7 +71,6 @@ namespace Parser.Parse
 
         public bool Parse(List<Terminal> terminals)
         {
-            terminals.Add(Terminal.EndOfFile);
             var terminalArray = terminals.ToArray();
             Stack<ISymbol> stack = new Stack<ISymbol>();
             stack.Push(Terminal.EndOfFile);
