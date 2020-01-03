@@ -60,6 +60,7 @@ namespace Parser.State
             {
                 sb.Append("R");
                 sb.Append("-" + Variable.Value);
+                sb.Append("-> " + string.Join("", Handle));
             }
             else if(Action==Action.Shift)
             {

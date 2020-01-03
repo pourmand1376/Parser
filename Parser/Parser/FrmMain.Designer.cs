@@ -50,15 +50,14 @@
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewLL_1 = new System.Windows.Forms.DataGridView();
             this.tabLR_0 = new System.Windows.Forms.TabPage();
-            this.dgvLR_0 = new System.Windows.Forms.DataGridView();
-            this.txtLRStates = new System.Windows.Forms.RichTextBox();
-            this.tab_SLR = new System.Windows.Forms.TabPage();
-            this.tab_Clr_1 = new System.Windows.Forms.TabPage();
-            this.lblTime = new System.Windows.Forms.Label();
             this.dataGridReportLR = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvLR_0 = new System.Windows.Forms.DataGridView();
+            this.txtLRStates = new System.Windows.Forms.RichTextBox();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.cmbGrammarType = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -67,8 +66,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).BeginInit();
             this.tabLR_0.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridReportLR)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -146,8 +145,6 @@
             this.tabItem.Controls.Add(this.tabPreprocess);
             this.tabItem.Controls.Add(this.ll_1_Tab);
             this.tabItem.Controls.Add(this.tabLR_0);
-            this.tabItem.Controls.Add(this.tab_SLR);
-            this.tabItem.Controls.Add(this.tab_Clr_1);
             this.tabItem.Location = new System.Drawing.Point(12, 10);
             this.tabItem.Name = "tabItem";
             this.tabItem.SelectedIndex = 0;
@@ -291,6 +288,7 @@
             // 
             // tabLR_0
             // 
+            this.tabLR_0.Controls.Add(this.cmbGrammarType);
             this.tabLR_0.Controls.Add(this.dataGridReportLR);
             this.tabLR_0.Controls.Add(this.dgvLR_0);
             this.tabLR_0.Controls.Add(this.txtLRStates);
@@ -299,63 +297,10 @@
             this.tabLR_0.Padding = new System.Windows.Forms.Padding(3);
             this.tabLR_0.Size = new System.Drawing.Size(640, 435);
             this.tabLR_0.TabIndex = 3;
-            this.tabLR_0.Text = "LR(0)";
+            this.tabLR_0.Text = "LR Grammars";
             this.tabLR_0.UseVisualStyleBackColor = true;
             this.tabLR_0.Click += new System.EventHandler(this.tabLR_0_Click);
             this.tabLR_0.Enter += new System.EventHandler(this.tabLR_0_Enter);
-            // 
-            // dgvLR_0
-            // 
-            this.dgvLR_0.AllowUserToAddRows = false;
-            this.dgvLR_0.AllowUserToDeleteRows = false;
-            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvLR_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvLR_0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLR_0.Location = new System.Drawing.Point(197, 6);
-            this.dgvLR_0.Name = "dgvLR_0";
-            this.dgvLR_0.ReadOnly = true;
-            this.dgvLR_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvLR_0.Size = new System.Drawing.Size(437, 200);
-            this.dgvLR_0.TabIndex = 2;
-            // 
-            // txtLRStates
-            // 
-            this.txtLRStates.Location = new System.Drawing.Point(6, 6);
-            this.txtLRStates.Name = "txtLRStates";
-            this.txtLRStates.Size = new System.Drawing.Size(185, 423);
-            this.txtLRStates.TabIndex = 0;
-            this.txtLRStates.Text = "";
-            // 
-            // tab_SLR
-            // 
-            this.tab_SLR.Location = new System.Drawing.Point(4, 22);
-            this.tab_SLR.Name = "tab_SLR";
-            this.tab_SLR.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_SLR.Size = new System.Drawing.Size(640, 435);
-            this.tab_SLR.TabIndex = 4;
-            this.tab_SLR.Text = "SLR(1)";
-            this.tab_SLR.UseVisualStyleBackColor = true;
-            // 
-            // tab_Clr_1
-            // 
-            this.tab_Clr_1.Location = new System.Drawing.Point(4, 22);
-            this.tab_Clr_1.Name = "tab_Clr_1";
-            this.tab_Clr_1.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Clr_1.Size = new System.Drawing.Size(640, 435);
-            this.tab_Clr_1.TabIndex = 5;
-            this.tab_Clr_1.Text = "CLR(1)";
-            this.tab_Clr_1.UseVisualStyleBackColor = true;
-            // 
-            // lblTime
-            // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(13, 474);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(35, 13);
-            this.lblTime.TabIndex = 4;
-            this.lblTime.Text = "label4";
             // 
             // dataGridReportLR
             // 
@@ -394,6 +339,53 @@
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
+            // dgvLR_0
+            // 
+            this.dgvLR_0.AllowUserToAddRows = false;
+            this.dgvLR_0.AllowUserToDeleteRows = false;
+            this.dgvLR_0.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvLR_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvLR_0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLR_0.Location = new System.Drawing.Point(197, 6);
+            this.dgvLR_0.Name = "dgvLR_0";
+            this.dgvLR_0.ReadOnly = true;
+            this.dgvLR_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvLR_0.Size = new System.Drawing.Size(437, 200);
+            this.dgvLR_0.TabIndex = 2;
+            // 
+            // txtLRStates
+            // 
+            this.txtLRStates.Location = new System.Drawing.Point(6, 29);
+            this.txtLRStates.Name = "txtLRStates";
+            this.txtLRStates.Size = new System.Drawing.Size(185, 400);
+            this.txtLRStates.TabIndex = 0;
+            this.txtLRStates.Text = "";
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(13, 474);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(35, 13);
+            this.lblTime.TabIndex = 4;
+            this.lblTime.Text = "label4";
+            // 
+            // cmbGrammarType
+            // 
+            this.cmbGrammarType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGrammarType.FormattingEnabled = true;
+            this.cmbGrammarType.Items.AddRange(new object[] {
+            "LR(0)",
+            "SLR(1)",
+            "CLR(1)"});
+            this.cmbGrammarType.Location = new System.Drawing.Point(6, 6);
+            this.cmbGrammarType.Name = "cmbGrammarType";
+            this.cmbGrammarType.Size = new System.Drawing.Size(185, 21);
+            this.cmbGrammarType.TabIndex = 4;
+            this.cmbGrammarType.SelectedIndexChanged += new System.EventHandler(this.cmbGrammarType_SelectedIndexChanged);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,8 +407,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReport)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLL_1)).EndInit();
             this.tabLR_0.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridReportLR)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLR_0)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -447,14 +439,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn InputText;
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
         private System.Windows.Forms.TabPage tabLR_0;
-        private System.Windows.Forms.TabPage tab_SLR;
-        private System.Windows.Forms.TabPage tab_Clr_1;
         private System.Windows.Forms.RichTextBox txtLRStates;
         private System.Windows.Forms.DataGridView dgvLR_0;
         private System.Windows.Forms.DataGridView dataGridReportLR;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.ComboBox cmbGrammarType;
     }
 }
 

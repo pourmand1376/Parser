@@ -3,6 +3,7 @@ using Parser.Parse;
 using Parser.States;
 using System.Collections.Generic;
 using System.Linq;
+using Parser.LLTable;
 
 namespace Parser.State
 {
@@ -15,13 +16,15 @@ namespace Parser.State
     {
         private readonly FiniteStateMachine _fsm;
         private readonly MapperToNumber _mapperToNumber;
+        private readonly LRType _lrType;
         public ParserAction[,] ActionTable { get; set; }
         public GoTo[,] GoToTable { get; set; }
 
-        public LRGrammarTable(FiniteStateMachine fsm, MapperToNumber mapperToNumber)
+        public LRGrammarTable(FiniteStateMachine fsm, MapperToNumber mapperToNumber, LRType lrType)
         {
             _fsm = fsm;
             _mapperToNumber = mapperToNumber;
+            _lrType = lrType;
         }
 
         public void Init()
@@ -106,9 +109,20 @@ namespace Parser.State
                     parser.Action = Action.Reduce;
                     parser.Variable = currentStateRowState.Variable;
                     parser.Handle = currentStateRowState.Rule;
-                    for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
+
+                    if (_lrType == LRType.Zero)
                     {
-                        AddParseActionToTable(currentState.StateId, i, parser);
+                        for (int i = 0; i < _mapperToNumber.TerminalCount; i++)
+                        {
+                            AddParseActionToTable(currentState.StateId, i, parser);
+                        }
+                    }
+                    else if (_lrType == LRType.SLR_One)
+                    {
+                        foreach (Terminal terminal in currentStateRowState.Variable.Follows)
+                        {
+                            AddParseActionToTable(currentState.StateId, _mapperToNumber.Map(terminal), parser);
+                        }
                     }
                 }
             }

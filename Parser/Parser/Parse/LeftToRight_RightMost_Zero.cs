@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Parser.Lexical;
+using Parser.LLTable;
 using Parser.Models;
 using Parser.State;
 using Parser.States;
@@ -13,14 +14,16 @@ namespace Parser.Parse
     public class LeftToRight_RightMost_Zero
     {
         private readonly GrammarRules _grammarRules;
+        private readonly LRType _lrType;
         private LRGrammarTable _grammarTable;
         public FiniteStateMachine FiniteStateMachine { get; }
 
         public  MapperToNumber MapperToNumber { get;  }
 
-        public LeftToRight_RightMost_Zero(GrammarRules grammarRules)
+        public LeftToRight_RightMost_Zero(GrammarRules grammarRules,LRType lrType)
         {
             _grammarRules = grammarRules;
+            _lrType = lrType;
             MapperToNumber = new MapperToNumber(_grammarRules);
             FiniteStateMachine = new FiniteStateMachine(_grammarRules);
         }
@@ -34,7 +37,7 @@ namespace Parser.Parse
         
         public LRGrammarTable FillTable()
         {
-            _grammarTable = new LRGrammarTable(FiniteStateMachine,MapperToNumber);
+            _grammarTable = new LRGrammarTable(FiniteStateMachine,MapperToNumber,_lrType);
             _grammarTable.Init(); 
             _grammarTable.FillTable(_grammarRules.HeadVariable);
             return _grammarTable;
@@ -62,7 +65,7 @@ namespace Parser.Parse
 
                 if (parserAction.Action == Action.Accept)
                 {
-                    parseReport.Stack =string.Join("",stack.ToArray());
+                    parseReport.Stack =string.Join("",stack.ToArray().Reverse());
                     parseReport.Output = "Success";
                     report.Report(parseReport);
                     return true;
@@ -86,7 +89,7 @@ namespace Parser.Parse
                     var goTo = _grammarTable.GetGoTo(peek, parserAction.Variable);
                     if (goTo == null) return false;
                     stack.Push(goTo.StateId);
-                    parseReport.Output = $"Reduce {countpop}.Push {parserAction.Variable} .GoTo {goTo}";
+                    parseReport.Output = $"Reduce {countpop}.Push {parserAction.Variable}::={string.Join("",parserAction.Handle)} .GoTo {goTo.StateId}";
                 }
                 else if (parserAction.Action == Action.Shift)
                 {
@@ -97,7 +100,7 @@ namespace Parser.Parse
                 }
                 
                 parseReport.InputString = string.Join("", terminals.Skip(position));
-                parseReport.Stack = string.Join("", stack.ToArray());
+                parseReport.Stack = string.Join("", stack.ToArray().Reverse());
                 report.Report(parseReport);
             }
 

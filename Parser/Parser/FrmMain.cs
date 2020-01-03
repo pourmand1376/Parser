@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Parser.LLTable;
 using Action = Parser.State.Action;
 
 namespace Parser
@@ -64,6 +65,9 @@ namespace Parser
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            cmbGrammarType.SelectedIndexChanged -= cmbGrammarType_SelectedIndexChanged;
+            cmbGrammarType.SelectedIndex = 0;
+            cmbGrammarType.SelectedIndexChanged += cmbGrammarType_SelectedIndexChanged;
         }
 
         private void TabPreprocess_Enter(object sender, EventArgs e)
@@ -93,6 +97,7 @@ namespace Parser
             progress.ProgressChanged += Progress_ProgressChanged;
 
             var leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules, progress);
+            
             leftToRightLookAhead1.Init();
             RestartStopWatch();
 
@@ -173,7 +178,8 @@ namespace Parser
             dgvLR_0.Rows.Clear();
             dgvLR_0.Columns.Clear();
 
-            LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules);
+            LRType lrType = (LRType) cmbGrammarType.SelectedIndex;
+            LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules,lrType);
             txtLRStates.Text=Lr_zero.CalculateStateMachine();
 
             var grammarTable = Lr_zero.FillTable();
@@ -193,6 +199,7 @@ namespace Parser
                 });
             }
 
+            bool valid = true;
             foreach (var state in Lr_zero.FiniteStateMachine.States)
             {
                 for (int j = 0; j < Lr_zero.MapperToNumber.TerminalCount; j++)
@@ -201,6 +208,7 @@ namespace Parser
                     if(parserAction==null) continue;
                     dgvLR_0.Rows[state.StateId].Cells[j].Value = parserAction;
                     dgvLR_0.Rows[state.StateId].Cells[j].Style.BackColor = !parserAction.HasError? Color.LightGreen: Color.Orange;
+                    if (parserAction.HasError) valid = false;
                 }
 
                 int terminalCount = Lr_zero.MapperToNumber.TerminalCount;
@@ -216,14 +224,19 @@ namespace Parser
             {
                 dataGridReportLR.Rows.Add(m.Stack, m.InputString, m.Output);
             };
-
-            Lr_zero.Parse(GetTerminals(),progress);
+            if(valid)
+              Lr_zero.Parse(GetTerminals(),progress);
 
         }
 
         private void tabLR_0_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cmbGrammarType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tabLR_0_Enter(null,null);
         }
     }
 }
