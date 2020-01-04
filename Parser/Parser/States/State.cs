@@ -56,9 +56,12 @@ namespace Parser.States
                     if (state.GetSymbolInPosition() is Variable variable)
                     {
                         var defaultLookAhead = state.LookAhead;
+                        // if there is no B, 
                         if (state.HasSymbolAfterPosition())
                         {
-                            var symbolsAfterPosition = state.GetSymbolsAfterPosition();
+                            //first (B{PreviousLookAhead})
+                            var symbolsAfterPosition = state.GetSymbolsAfterPosition().ToList();
+                            symbolsAfterPosition.AddRange(defaultLookAhead);
                             defaultLookAhead=_preprocessor.FirstSet(new List<IEnumerable<ISymbol>> {symbolsAfterPosition});
                         }
                         variable.RuleSet.Definitions
