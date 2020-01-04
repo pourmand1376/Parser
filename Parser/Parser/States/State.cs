@@ -57,7 +57,7 @@ namespace Parser.States
                     {
                         var defaultLookAhead = state.LookAhead;
                         // if there is no B, 
-                        if (state.HasSymbolAfterPosition())
+                        if (_isClr && state.HasSymbolAfterPosition())
                         {
                             //first (B{PreviousLookAhead})
                             var symbolsAfterPosition = state.GetSymbolsAfterPosition().ToList();
