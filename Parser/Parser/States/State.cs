@@ -26,6 +26,10 @@ namespace Parser.States
 
         public Dictionary<ISymbol, State> NextStates { get; set; }
 
+        public bool ReduceOnly => RowStates.All(f => f.Finished);
+        public bool ShiftOnly => RowStates.All(f => !f.Finished);
+        public bool PossibleConflict => !ReduceOnly && !ShiftOnly;
+
         public State(Preprocessor preprocessor,bool isClr = false)
         {
             _preprocessor = preprocessor;
@@ -61,8 +65,13 @@ namespace Parser.States
                         {
                             //first (B{PreviousLookAhead})
                             var symbolsAfterPosition = state.GetSymbolsAfterPosition().ToList();
-                            symbolsAfterPosition.AddRange(defaultLookAhead);
+                            //symbolsAfterPosition.AddRange(defaultLookAhead);
                             defaultLookAhead=_preprocessor.FirstSet(new List<IEnumerable<ISymbol>> {symbolsAfterPosition});
+                            if (defaultLookAhead.Contains(Terminal.Epsilon))
+                            {
+                                defaultLookAhead.Remove(Terminal.Epsilon);
+                                defaultLookAhead.AddRange(state.LookAhead);
+                            }
                         }
                         variable.RuleSet.Definitions
                             .ForEach(rule =>
@@ -135,5 +144,12 @@ namespace Parser.States
                    $"Comming From {PreviousState?.StateId.ToString() ?? "God"} with {TransferredSymbol}\n" +
                    string.Join("\n", RowStates) + "\n\n" + nextState;
         }
+
+        public string ToStringCompact()
+        {
+            var shiftReduce = ShiftOnly ? "ShiftOnly" : ReduceOnly ? "ReduceOnly" : "Possible Conflict.";
+            return $"State No:{StateId}\n{string.Join("\n", RowStates)}\n\n{shiftReduce}";
+        }
+
     }
 }

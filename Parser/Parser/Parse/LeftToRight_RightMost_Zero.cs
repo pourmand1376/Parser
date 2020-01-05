@@ -59,15 +59,20 @@ namespace Parser.Parse
             while (stack.Count > 0)
             {
                 ParseReportModel parseReport = new ParseReportModel();
-
+                parseReport.Stack =string.Join("",stack.ToArray().Reverse());
+                parseReport.InputString = string.Join("", terminals.Skip(position));
                 int peek = (int) stack.Peek();
                 var textPosition = text[position];
                 var parserAction = _grammarTable.GetParserAction(peek, textPosition);
-                if (parserAction == null) return false;
+                if (parserAction == null)
+                {
+                    parseReport.Output = "No Parser Action is found";
+                    report.Report(parseReport);
+                    return false;
+                }
 
                 if (parserAction.Action == Action.Accept)
                 {
-                    parseReport.Stack =string.Join("",stack.ToArray().Reverse());
                     parseReport.Output = "Success";
                     report.Report(parseReport);
                     return true;
@@ -76,20 +81,33 @@ namespace Parser.Parse
                 {
                     int countpop = parserAction.Handle.Count();
                     ISymbol[] symbols = parserAction.Handle.Reverse().ToArray();
-                    for (int i = 0; i < countpop; i++)
+                    if (!parserAction.Handle.Contains(Terminal.Epsilon))
                     {
-                        stack.Pop();//pop the number
-                        ISymbol pop = (ISymbol) stack.Pop();
-                        if (!symbols[i].Equals(pop))
+                        for (int i = 0; i < countpop; i++)
                         {
-                            return false;
+                            stack.Pop(); //pop the number
+                            ISymbol pop = (ISymbol) stack.Pop();
+                            if (!symbols[i].Equals(pop))
+                            {
+                                parseReport.Stack = string.Join("", stack.ToArray().Reverse());
+                                parseReport.InputString = string.Join("", terminals.Skip(position));
+                                parseReport.Output = "symbol is not equal to the top of stack";
+                                report.Report(parseReport);
+                                return false;
+                            }
                         }
                     }
 
                     peek = (int) stack.Peek();    
                     stack.Push(parserAction.Variable);
                     var goTo = _grammarTable.GetGoTo(peek, parserAction.Variable);
-                    if (goTo == null) return false;
+                    if (goTo == null)
+                    {
+                        parseReport.Stack =string.Join("",stack.ToArray().Reverse());
+                        parseReport.Output = "GoTo table is null";
+                        report.Report(parseReport);
+                        return false;
+                    }
                     stack.Push(goTo.StateId);
                     parseReport.Output = $"Reduce {countpop}.Push {parserAction.Variable}::={string.Join("",parserAction.Handle)} .GoTo {goTo.StateId}";
                 }

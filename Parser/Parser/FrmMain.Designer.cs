@@ -58,6 +58,7 @@
             this.dgvLR_0 = new System.Windows.Forms.DataGridView();
             this.txtLRStates = new System.Windows.Forms.RichTextBox();
             this.lblTime = new System.Windows.Forms.Label();
+            this.btnFSM = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -306,6 +307,7 @@
             // 
             // tabLR_0
             // 
+            this.tabLR_0.Controls.Add(this.btnFSM);
             this.tabLR_0.Controls.Add(this.cmbGrammarType);
             this.tabLR_0.Controls.Add(this.dataGridReportLR);
             this.tabLR_0.Controls.Add(this.dgvLR_0);
@@ -395,7 +397,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.txtLRStates.Location = new System.Drawing.Point(6, 29);
             this.txtLRStates.Name = "txtLRStates";
-            this.txtLRStates.Size = new System.Drawing.Size(185, 400);
+            this.txtLRStates.Size = new System.Drawing.Size(185, 367);
             this.txtLRStates.TabIndex = 0;
             this.txtLRStates.Text = "";
             // 
@@ -408,6 +410,17 @@
             this.lblTime.Size = new System.Drawing.Size(35, 13);
             this.lblTime.TabIndex = 4;
             this.lblTime.Text = "label4";
+            // 
+            // btnFSM
+            // 
+            this.btnFSM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFSM.Location = new System.Drawing.Point(6, 402);
+            this.btnFSM.Name = "btnFSM";
+            this.btnFSM.Size = new System.Drawing.Size(185, 27);
+            this.btnFSM.TabIndex = 5;
+            this.btnFSM.Text = "View Finite State Machine";
+            this.btnFSM.UseVisualStyleBackColor = true;
+            this.btnFSM.Click += new System.EventHandler(this.btnFSM_Click);
             // 
             // FrmMain
             // 
@@ -469,6 +482,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.ComboBox cmbGrammarType;
+        private System.Windows.Forms.Button btnFSM;
     }
 }
 

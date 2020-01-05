@@ -121,9 +121,10 @@ namespace Parser.States
             StringBuilder stringBuilder = new StringBuilder();
             int position = 0;
             bool printed = false;
+            bool hasEpsilon = Rule.Contains(Terminal.Epsilon);
             foreach (ISymbol symbol in Rule)
             {
-                if (position == Position)
+                if (position == Position && !hasEpsilon)
                 {
                     stringBuilder.Append(" ☺ ");
                     printed = true;
@@ -131,8 +132,9 @@ namespace Parser.States
                 stringBuilder.Append(symbol);
                 position++;
             }
-            if(!printed) stringBuilder.Append(" ☺ ");
+            if(!printed && !hasEpsilon) stringBuilder.Append(" ☺ ");
 
+            
             if (LookAhead?.Count > 0)
             {
                 stringBuilder.Append($",[{string.Join("", LookAhead)}]");

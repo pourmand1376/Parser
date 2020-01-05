@@ -4,13 +4,16 @@ using Parser.Parse;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using Parser.LLTable;
 using Action = Parser.State.Action;
+using Color = System.Drawing.Color;
 
 namespace Parser
 {
@@ -19,6 +22,7 @@ namespace Parser
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private GrammarRules _grammarRules;
         private Preprocessor _preprocessor;
+        private LeftToRight_RightMost_Zero _lrZero;
 
         public FrmMain()
         {
@@ -74,6 +78,8 @@ namespace Parser
             cmbGrammarType.SelectedIndexChanged -= cmbGrammarType_SelectedIndexChanged;
             cmbGrammarType.SelectedIndex = 0;
             cmbGrammarType.SelectedIndexChanged += cmbGrammarType_SelectedIndexChanged;
+
+          
         }
 
         private void TabPreprocess_Enter(object sender, EventArgs e)
@@ -205,6 +211,7 @@ namespace Parser
 
         private void tabLR_0_Enter(object sender, EventArgs e)
         {
+            dataGridReportLR.Rows.Clear();
             dgvLR_0.Rows.Clear();
             dgvLR_0.Columns.Clear();
 
@@ -218,21 +225,21 @@ namespace Parser
             }
 
             LRType lrType = (LRType) cmbGrammarType.SelectedIndex;
-            LeftToRight_RightMost_Zero Lr_zero = new LeftToRight_RightMost_Zero(_grammarRules,lrType,_preprocessor);
+            _lrZero = new LeftToRight_RightMost_Zero(_grammarRules,lrType,_preprocessor);
             RestartStopWatch();
-            txtLRStates.Text=Lr_zero.CalculateStateMachine();
-            var grammarTable = Lr_zero.FillTable();
+            txtLRStates.Text=_lrZero.CalculateStateMachine();
+            var grammarTable = _lrZero.FillTable();
             _stopwatch.Stop();
             var tableAndStateMachine = _stopwatch.ElapsedMilliseconds;
-            foreach(var keyValuePair in Lr_zero.MapperToNumber.MapTerminalToNumber)
+            foreach(var keyValuePair in _lrZero.MapperToNumber.MapTerminalToNumber)
             {
                 dgvLR_0.Columns.Add(keyValuePair.Key, keyValuePair.Key);
             }
-            foreach(var keyValuePair in Lr_zero.MapperToNumber.MapVariableToNumber.Skip(1))
+            foreach(var keyValuePair in _lrZero.MapperToNumber.MapVariableToNumber.Skip(1))
             {
                 dgvLR_0.Columns.Add(keyValuePair.Key, keyValuePair.Key);
             }
-            foreach (var keyValue in Lr_zero.FiniteStateMachine.States)
+            foreach (var keyValue in _lrZero.FiniteStateMachine.States)
             {
                 dgvLR_0.Rows.Add(new DataGridViewRow()
                 {
@@ -241,9 +248,9 @@ namespace Parser
             }
 
             bool valid = true;
-            foreach (var state in Lr_zero.FiniteStateMachine.States)
+            foreach (var state in _lrZero.FiniteStateMachine.States)
             {
-                for (int j = 0; j < Lr_zero.MapperToNumber.TerminalCount; j++)
+                for (int j = 0; j < _lrZero.MapperToNumber.TerminalCount; j++)
                 {
                     var parserAction = grammarTable.ActionTable[state.StateId, j];
                     if(parserAction==null) continue;
@@ -252,8 +259,8 @@ namespace Parser
                     if (parserAction.HasError) valid = false;
                 }
 
-                int terminalCount = Lr_zero.MapperToNumber.TerminalCount;
-                for (int j = 0; j < Lr_zero.MapperToNumber.VariableCount; j++)
+                int terminalCount = _lrZero.MapperToNumber.TerminalCount;
+                for (int j = 0; j < _lrZero.MapperToNumber.VariableCount; j++)
                 {
                     if(grammarTable.GoToTable[state.StateId, j]==null) continue;
                     dgvLR_0.Rows[state.StateId].Cells[j+terminalCount-1].Value = grammarTable.GoToTable[state.StateId, j].StateId;
@@ -276,7 +283,7 @@ namespace Parser
                     return;
                 }
                 RestartStopWatch();
-                Lr_zero.Parse(terminals,progress);
+                _lrZero.Parse(terminals,progress);
                 _stopwatch.Stop();
                 stackTime = _stopwatch.ElapsedMilliseconds;
             }
@@ -307,6 +314,58 @@ namespace Parser
 //                    e.Cancel = true;
 //                }
 //            }
+        }
+
+        private void btnFSM_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Form form = new System.Windows.Forms.Form();
+            form.WindowState = FormWindowState.Maximized;
+            //create a viewer object 
+            Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+            
+            //create a graph object 
+            var graph = new Graph("Finite State Machine");
+            //create the graph content 
+            
+            Dictionary<States.State,Node> dictionary = new Dictionary<States.State, Node>();
+            foreach (States.State state in _lrZero.FiniteStateMachine.States)
+            {
+                Node node = new Node(state.ToStringCompact());
+                node.Attr.FillColor = state.ReduceOnly ? Microsoft.Msagl.Drawing.Color.SeaGreen :
+                                        (state.ShiftOnly ? Microsoft.Msagl.Drawing.Color.LightGreen : Microsoft.Msagl.Drawing.Color.Orange);
+
+                dictionary.Add(state,node);
+                graph.AddNode(node);
+            }
+
+            foreach (States.State state in _lrZero.FiniteStateMachine.States)
+            {
+                foreach (KeyValuePair<ISymbol, States.State> stateNextState in state.NextStates)
+                {
+                    var edge = new Edge(dictionary[state],dictionary[stateNextState.Value],ConnectionToGraph.Connected);
+                    edge.LabelText = stateNextState.Key.ToString();
+                    graph.AddPrecalculatedEdge(edge);
+                }
+            }
+
+//
+//            graph.AddEdge("A", "B");
+//            graph.AddEdge("B", "C");
+//            graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+//            graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
+//            graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
+//            Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
+//            c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
+//            c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
+            //bind the graph to the viewer 
+            viewer.Graph = graph;
+            //associate the viewer with the form 
+            form.SuspendLayout();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            form.Controls.Add(viewer);
+            form.ResumeLayout();
+            //show the form 
+            form.ShowDialog();
         }
     }
 }
