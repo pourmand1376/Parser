@@ -59,6 +59,7 @@
             this.txtLRStates = new System.Windows.Forms.RichTextBox();
             this.lblTime = new System.Windows.Forms.Label();
             this.btnFSM = new System.Windows.Forms.Button();
+            this.btnShowParseTree = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -307,6 +308,7 @@
             // 
             // tabLR_0
             // 
+            this.tabLR_0.Controls.Add(this.btnShowParseTree);
             this.tabLR_0.Controls.Add(this.btnFSM);
             this.tabLR_0.Controls.Add(this.cmbGrammarType);
             this.tabLR_0.Controls.Add(this.dataGridReportLR);
@@ -352,7 +354,7 @@
             this.dataGridReportLR.Name = "dataGridReportLR";
             this.dataGridReportLR.ReadOnly = true;
             this.dataGridReportLR.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridReportLR.Size = new System.Drawing.Size(437, 217);
+            this.dataGridReportLR.Size = new System.Drawing.Size(437, 184);
             this.dataGridReportLR.TabIndex = 3;
             // 
             // dataGridViewTextBoxColumn1
@@ -422,6 +424,18 @@
             this.btnFSM.UseVisualStyleBackColor = true;
             this.btnFSM.Click += new System.EventHandler(this.btnFSM_Click);
             // 
+            // btnShowParseTree
+            // 
+            this.btnShowParseTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowParseTree.Location = new System.Drawing.Point(197, 402);
+            this.btnShowParseTree.Name = "btnShowParseTree";
+            this.btnShowParseTree.Size = new System.Drawing.Size(437, 27);
+            this.btnShowParseTree.TabIndex = 5;
+            this.btnShowParseTree.Text = "Show Parse Tree";
+            this.btnShowParseTree.UseVisualStyleBackColor = true;
+            this.btnShowParseTree.Click += new System.EventHandler(this.btnShowParseTree_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -483,6 +497,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.ComboBox cmbGrammarType;
         private System.Windows.Forms.Button btnFSM;
+        private System.Windows.Forms.Button btnShowParseTree;
     }
 }
 

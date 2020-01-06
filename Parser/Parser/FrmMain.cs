@@ -14,6 +14,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Parser.LLTable;
 using Action = Parser.State.Action;
 using Color = System.Drawing.Color;
+using TreeNode = Parser.Parse.TreeNode;
 
 namespace Parser
 {
@@ -348,17 +349,39 @@ namespace Parser
                 }
             }
 
-//
-//            graph.AddEdge("A", "B");
-//            graph.AddEdge("B", "C");
-//            graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-//            graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
-//            graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
-//            Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
-//            c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
-//            c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
-            //bind the graph to the viewer 
             viewer.Graph = graph;
+            //associate the viewer with the form 
+            form.SuspendLayout();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            form.Controls.Add(viewer);
+            form.ResumeLayout();
+            //show the form 
+            form.ShowDialog();
+        }
+
+        private void btnShowParseTree_Click(object sender, EventArgs e)
+        {
+            var form = new Form();
+            form.WindowState = FormWindowState.Maximized;
+            GViewer viewer = new GViewer();
+            var tree = new PhyloTree();
+            Queue<TreeNode> nodes = new Queue<TreeNode>();
+            foreach (TreeNode lrZeroNode in _lrZero.Nodes)
+            {
+                nodes.Enqueue(lrZeroNode);
+            }
+
+            while (nodes.Count > 0)
+            {
+                TreeNode treeNode = nodes.Dequeue();
+                foreach (TreeNode childNode in treeNode.Nodes)
+                {
+                    tree.AddEdge(treeNode.ToString(), childNode.ToString());
+                    nodes.Enqueue(childNode);
+                }
+            }
+
+            viewer.Graph = tree;
             //associate the viewer with the form 
             form.SuspendLayout();
             viewer.Dock = System.Windows.Forms.DockStyle.Fill;
