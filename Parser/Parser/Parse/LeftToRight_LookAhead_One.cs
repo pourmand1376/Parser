@@ -16,9 +16,15 @@ namespace Parser.Parse
         private List<ISymbol>[,] table;
         public MapperToNumber MapperToNumber { get; }
 
+        private Stack<TreeNode> treeNodes;
+        private int _orderId = 1;
+        public TreeNode BaseNode { get; set; }
+        
         public LeftToRight_LookAhead_One(GrammarRules grammarRules,IProgress<ParseReportModel> progress)
         {
-            
+            treeNodes = new Stack<TreeNode>();
+            BaseNode = new TreeNode(grammarRules.HeadVariable,_orderId);
+            treeNodes.Push(BaseNode);
             _grammarRules = grammarRules;
             _progress = progress;
             MapperToNumber = new MapperToNumber(_grammarRules);
@@ -97,7 +103,11 @@ namespace Parser.Parse
                         if (current.Equals(Terminal.EndOfFile)) return true;
                         position++;
                         parseReport.Output = $"Matched {current} Terminal";
+
+                        var treeNode = treeNodes.Pop();
                     }
+
+                    
                 }
                 else if (popedValue is Variable variable)
                 {
@@ -109,11 +119,24 @@ namespace Parser.Parse
                         {
                             reversed.Push(symbol);
                         }
-
+                        
                         parseReport.Output ="Pushing "+ string.Join("",itemsToBepushed);
+                        var father = treeNodes.Pop();
                         while(reversed.Count>0)
-                            if (reversed.Peek().Equals(Terminal.Epsilon)) break;
-                                else stack.Push(reversed.Pop());
+                        {
+                            if (reversed.Peek().Equals(Terminal.Epsilon))
+                            {
+                                var pop = reversed.Pop();    
+                                father.Nodes.Add(new TreeNode(pop,_orderId++));
+                                break;
+                            }
+                            var symbol = reversed.Pop();
+                            stack.Push(symbol);
+
+                            var treeNode = new TreeNode(symbol,_orderId++);
+                            treeNodes.Push(treeNode);
+                            father.Nodes.Add(treeNode);
+                        }
                     }
                 }
                 else

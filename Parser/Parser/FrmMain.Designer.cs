@@ -60,6 +60,7 @@
             this.lblTime = new System.Windows.Forms.Label();
             this.btnFSM = new System.Windows.Forms.Button();
             this.btnShowParseTree = new System.Windows.Forms.Button();
+            this.btnLLParseTree = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -241,6 +242,7 @@
             // 
             // ll_1_Tab
             // 
+            this.ll_1_Tab.Controls.Add(this.btnLLParseTree);
             this.ll_1_Tab.Controls.Add(this.dataGridViewReport);
             this.ll_1_Tab.Controls.Add(this.dataGridViewLL_1);
             this.ll_1_Tab.Location = new System.Drawing.Point(4, 22);
@@ -268,7 +270,7 @@
             this.dataGridViewReport.Name = "dataGridViewReport";
             this.dataGridViewReport.ReadOnly = true;
             this.dataGridViewReport.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridViewReport.Size = new System.Drawing.Size(628, 247);
+            this.dataGridViewReport.Size = new System.Drawing.Size(628, 214);
             this.dataGridViewReport.TabIndex = 2;
             // 
             // Stack
@@ -298,6 +300,7 @@
             this.dataGridViewLL_1.AllowUserToDeleteRows = false;
             this.dataGridViewLL_1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewLL_1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewLL_1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewLL_1.Location = new System.Drawing.Point(6, 6);
             this.dataGridViewLL_1.Name = "dataGridViewLL_1";
@@ -436,6 +439,18 @@
             this.btnShowParseTree.UseVisualStyleBackColor = true;
             this.btnShowParseTree.Click += new System.EventHandler(this.btnShowParseTree_Click);
             // 
+            // btnLLParseTree
+            // 
+            this.btnLLParseTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLLParseTree.Location = new System.Drawing.Point(6, 402);
+            this.btnLLParseTree.Name = "btnLLParseTree";
+            this.btnLLParseTree.Size = new System.Drawing.Size(628, 27);
+            this.btnLLParseTree.TabIndex = 3;
+            this.btnLLParseTree.Text = "Show Parse Tree";
+            this.btnLLParseTree.UseVisualStyleBackColor = true;
+            this.btnLLParseTree.Click += new System.EventHandler(this.btnLLParseTree_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -445,6 +460,7 @@
             this.Controls.Add(this.lblTime);
             this.Controls.Add(this.tabItem);
             this.Name = "FrmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Configure";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.groupBox1.ResumeLayout(false);
@@ -498,6 +514,7 @@
         private System.Windows.Forms.ComboBox cmbGrammarType;
         private System.Windows.Forms.Button btnFSM;
         private System.Windows.Forms.Button btnShowParseTree;
+        private System.Windows.Forms.Button btnLLParseTree;
     }
 }
 

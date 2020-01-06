@@ -24,6 +24,7 @@ namespace Parser
         private GrammarRules _grammarRules;
         private Preprocessor _preprocessor;
         private LeftToRight_RightMost_Zero _lrZero;
+        private LeftToRight_LookAhead_One _leftToRightLookAhead1;
 
         public FrmMain()
         {
@@ -117,23 +118,24 @@ namespace Parser
                 MessageBox.Show("Grammer file is empty");
                 return;
             }
-            var leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules, progress);
-            
-            leftToRightLookAhead1.Init();
+
+            _leftToRightLookAhead1 = new LeftToRight_LookAhead_One(_grammarRules, progress);
+
+            _leftToRightLookAhead1.Init();
             RestartStopWatch();
 
-            var data = await Task.Run(() => leftToRightLookAhead1.ProcessTable());
+            var data = await Task.Run(() => _leftToRightLookAhead1.ProcessTable());
             _stopwatch.Stop();
             var creatingTableTime = _stopwatch.ElapsedMilliseconds;
             
             dataGridViewLL_1.Columns.Clear();
             dataGridViewLL_1.Rows.Clear();
-            foreach (KeyValuePair<string, int> keyValuePair in leftToRightLookAhead1.MapperToNumber.MapTerminalToNumber)
+            foreach (KeyValuePair<string, int> keyValuePair in _leftToRightLookAhead1.MapperToNumber.MapTerminalToNumber)
             {
                 dataGridViewLL_1.Columns.Add(keyValuePair.Key, keyValuePair.Key);
             }
 
-            foreach (var keyValue in leftToRightLookAhead1.MapperToNumber.MapVariableToNumber)
+            foreach (var keyValue in _leftToRightLookAhead1.MapperToNumber.MapVariableToNumber)
             {
                 dataGridViewLL_1.Rows.Add(new DataGridViewRow()
                 {
@@ -142,9 +144,9 @@ namespace Parser
             }
 
             bool isValid = true;
-            for (var i = 0; i < leftToRightLookAhead1.MapperToNumber.VariableCount; i++)
+            for (var i = 0; i < _leftToRightLookAhead1.MapperToNumber.VariableCount; i++)
             {
-                for (var j = 0; j < leftToRightLookAhead1.MapperToNumber.TerminalCount; j++)
+                for (var j = 0; j < _leftToRightLookAhead1.MapperToNumber.TerminalCount; j++)
                 {
                     if (data[i, j] == null)
                     {
@@ -173,7 +175,7 @@ namespace Parser
                     return;
                 }
                 RestartStopWatch();
-                leftToRightLookAhead1.Parse(terminals);
+                _leftToRightLookAhead1.Parse(terminals);
                 _stopwatch.Stop();
                 calculatingString = _stopwatch.ElapsedMilliseconds;
             }
@@ -361,33 +363,52 @@ namespace Parser
 
         private void btnShowParseTree_Click(object sender, EventArgs e)
         {
-            var form = new Form();
-            form.WindowState = FormWindowState.Maximized;
-            GViewer viewer = new GViewer();
-            var tree = new PhyloTree();
+
             Queue<TreeNode> nodes = new Queue<TreeNode>();
             foreach (TreeNode lrZeroNode in _lrZero.Nodes)
             {
                 nodes.Enqueue(lrZeroNode);
             }
+            ShowParseTree(nodes);
+            
+        }
+
+        private void btnLLParseTree_Click(object sender, EventArgs e)
+        {
+            Queue<TreeNode> nodes = new Queue<TreeNode>();
+            foreach (TreeNode lrZeroNode in _leftToRightLookAhead1.BaseNode.Nodes)
+            {
+                nodes.Enqueue(lrZeroNode);
+            }
+            ShowParseTree(nodes);
+        }
+
+        private void ShowParseTree(Queue<TreeNode> nodes)
+        {
+            var form = new Form();
+            form.WindowState = FormWindowState.Maximized;
+            GViewer viewer = new GViewer();
+            var tree = new PhyloTree();
+            
 
             while (nodes.Count > 0)
             {
                 TreeNode treeNode = nodes.Dequeue();
                 foreach (TreeNode childNode in treeNode.Nodes)
                 {
-                    tree.AddEdge(treeNode.ToString(), childNode.ToString());
+                    Node node=tree.AddNode(treeNode.ToString());
+                    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Orange;
+                    tree.AddEdge(treeNode.ToString(),childNode.ToString());
+                    
                     nodes.Enqueue(childNode);
                 }
             }
 
             viewer.Graph = tree;
-            //associate the viewer with the form 
             form.SuspendLayout();
             viewer.Dock = System.Windows.Forms.DockStyle.Fill;
             form.Controls.Add(viewer);
             form.ResumeLayout();
-            //show the form 
             form.ShowDialog();
         }
     }
