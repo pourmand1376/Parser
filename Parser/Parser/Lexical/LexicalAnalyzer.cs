@@ -58,7 +58,7 @@ namespace Parser
 
         private void LineTokenExtractor(string line)
         {
-            Regex text = new Regex(@"<(?<variable>[\w-]+)>|""(?<terminal>[^""<>:]+)?""",RegexOptions.Compiled);
+            Regex text = new Regex(@"<(?<variable>[\w-]+)>|""(?<terminal>[^""<>]+)?""",RegexOptions.Compiled);
 
             var matches=text.Matches(line);
             var firstVariable = matches[0].Groups["variable"];

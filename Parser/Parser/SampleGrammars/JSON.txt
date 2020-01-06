@@ -1,0 +1,28 @@
+<JSON> ::= <array>
+<JSON> ::= <object>
+
+<array> ::= "[" <value> "]" 
+<array> ::= "[" <value> "," <value> "]" 
+
+<object> ::= "{" <pair> "}"
+<object> ::= "{" <pair> "," <pair> "}"
+
+<pair> ::= <string> ":" <value>
+
+<value> ::= <string>
+<value> ::= <number>
+<value> ::= <object>
+<value> ::= <array>
+<value> ::= "True"
+<value> ::= "False"
+<value> ::= "null"
+
+<string> ::= "a"
+<string> ::= "b"
+<string> ::= "c"
+<string> ::= "d"
+
+<number> ::= "1"
+<number> ::= "2"
+<number> ::= "3"
+<number> ::= "4"
