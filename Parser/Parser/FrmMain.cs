@@ -111,6 +111,7 @@ namespace Parser
 
         private async void ll_1_Tab_Enter(object sender, EventArgs e)
         {
+            dataGridViewReport.Rows.Clear();
             Progress<ParseReportModel> progress = new Progress<ParseReportModel>();
             progress.ProgressChanged += Progress_ProgressChanged;
             if (_grammarRules == null)

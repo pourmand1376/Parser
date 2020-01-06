@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Parser.Lexical;
 using Parser.Models;
+using Parser.State;
 
 namespace Parser.Parse
 {
@@ -100,8 +101,16 @@ namespace Parser.Parse
                 {
                     if (terminal.Equals(current))
                     {
-                        if (current.Equals(Terminal.EndOfFile)) return true;
+                        if (current.Equals(Terminal.EndOfFile))
+                        {
+                            parseReport.Output = "Success";
+                            position++;
+                            parseReport.InputString = string.Join("",terminalArray.Skip(position));
+                            _progress.Report(parseReport);
+                            return true;
+                        }
                         position++;
+                        
                         parseReport.Output = $"Matched {current} Terminal";
 
                         var treeNode = treeNodes.Pop();
@@ -146,8 +155,8 @@ namespace Parser.Parse
                     _progress.Report(parseReport);
                     return false;
                 }
-
-                parseReport.Stack = string.Join("", stack.ToArray().Reverse());
+                parseReport.InputString = string.Join("", terminalArray.Skip(position));
+                parseReport.Stack = string.Join("", stack.ToArray().Reverse());  
                 _progress.Report(parseReport);
             }
             

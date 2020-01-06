@@ -1,11 +1,17 @@
 <JSON> ::= <array>
 <JSON> ::= <object>
 
-<array> ::= "[" <value> "]" 
-<array> ::= "[" <value> "," <value> "]" 
+<array> ::= "[" <arrayinside> "]" 
 
-<object> ::= "{" <pair> "}"
-<object> ::= "{" <pair> "," <pair> "}"
+<arrayinside> ::= <value>
+<arrayinside> ::= <value> "," <arrayinside>
+<arrayinside> ::= ""
+
+<object> ::= "{" <objectinside> "}"
+
+<objectinside> ::= <pair>
+<objectinside> ::= <pair> "," <objectinside>
+<objectinside> :: ""
 
 <pair> ::= <string> ":" <value>
 
