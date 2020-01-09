@@ -44,12 +44,15 @@
             this.listBoxFollow = new System.Windows.Forms.ListBox();
             this.listBoxFirst = new System.Windows.Forms.ListBox();
             this.ll_1_Tab = new System.Windows.Forms.TabPage();
+            this.btnLLParseTree = new System.Windows.Forms.Button();
             this.dataGridViewReport = new System.Windows.Forms.DataGridView();
             this.Stack = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InputText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewLL_1 = new System.Windows.Forms.DataGridView();
             this.tabLR_0 = new System.Windows.Forms.TabPage();
+            this.btnShowParseTree = new System.Windows.Forms.Button();
+            this.btnFSM = new System.Windows.Forms.Button();
             this.cmbGrammarType = new System.Windows.Forms.ComboBox();
             this.dataGridReportLR = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,9 +61,6 @@
             this.dgvLR_0 = new System.Windows.Forms.DataGridView();
             this.txtLRStates = new System.Windows.Forms.RichTextBox();
             this.lblTime = new System.Windows.Forms.Label();
-            this.btnFSM = new System.Windows.Forms.Button();
-            this.btnShowParseTree = new System.Windows.Forms.Button();
-            this.btnLLParseTree = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.tabItem.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -77,6 +77,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.BackColor = System.Drawing.Color.Transparent;
             this.groupBox1.Controls.Add(this.btnChooseTestFile);
             this.groupBox1.Controls.Add(this.txtTestFile);
             this.groupBox1.Controls.Add(this.label4);
@@ -92,12 +93,15 @@
             // 
             // btnChooseTestFile
             // 
-            this.btnChooseTestFile.Location = new System.Drawing.Point(570, 48);
+            this.btnChooseTestFile.BackColor = System.Drawing.Color.DodgerBlue;
+            this.btnChooseTestFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnChooseTestFile.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnChooseTestFile.Location = new System.Drawing.Point(550, 47);
             this.btnChooseTestFile.Name = "btnChooseTestFile";
-            this.btnChooseTestFile.Size = new System.Drawing.Size(45, 23);
+            this.btnChooseTestFile.Size = new System.Drawing.Size(65, 23);
             this.btnChooseTestFile.TabIndex = 5;
-            this.btnChooseTestFile.Text = "...";
-            this.btnChooseTestFile.UseVisualStyleBackColor = true;
+            this.btnChooseTestFile.Text = "Browse";
+            this.btnChooseTestFile.UseVisualStyleBackColor = false;
             this.btnChooseTestFile.Click += new System.EventHandler(this.btnChooseTestFile_Click);
             // 
             // txtTestFile
@@ -105,7 +109,7 @@
             this.txtTestFile.Enabled = false;
             this.txtTestFile.Location = new System.Drawing.Point(117, 49);
             this.txtTestFile.Name = "txtTestFile";
-            this.txtTestFile.Size = new System.Drawing.Size(447, 20);
+            this.txtTestFile.Size = new System.Drawing.Size(415, 20);
             this.txtTestFile.TabIndex = 4;
             // 
             // label4
@@ -119,25 +123,30 @@
             // 
             // btnChooseFile
             // 
-            this.btnChooseFile.Location = new System.Drawing.Point(570, 19);
+            this.btnChooseFile.BackColor = System.Drawing.Color.DodgerBlue;
+            this.btnChooseFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnChooseFile.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnChooseFile.Location = new System.Drawing.Point(550, 18);
             this.btnChooseFile.Name = "btnChooseFile";
-            this.btnChooseFile.Size = new System.Drawing.Size(45, 23);
+            this.btnChooseFile.Size = new System.Drawing.Size(65, 23);
             this.btnChooseFile.TabIndex = 2;
-            this.btnChooseFile.Text = "...";
-            this.btnChooseFile.UseVisualStyleBackColor = true;
+            this.btnChooseFile.Text = "Browse";
+            this.btnChooseFile.UseVisualStyleBackColor = false;
             this.btnChooseFile.Click += new System.EventHandler(this.btnChooseFile_Click);
             // 
             // txtgrammarFile
             // 
+            this.txtgrammarFile.BackColor = System.Drawing.SystemColors.Window;
             this.txtgrammarFile.Enabled = false;
-            this.txtgrammarFile.Location = new System.Drawing.Point(117, 20);
+            this.txtgrammarFile.Location = new System.Drawing.Point(117, 21);
             this.txtgrammarFile.Name = "txtgrammarFile";
-            this.txtgrammarFile.Size = new System.Drawing.Size(447, 20);
+            this.txtgrammarFile.Size = new System.Drawing.Size(415, 20);
             this.txtgrammarFile.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Location = new System.Drawing.Point(15, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 13);
@@ -157,12 +166,14 @@
             this.tabItem.Name = "tabItem";
             this.tabItem.SelectedIndex = 0;
             this.tabItem.Size = new System.Drawing.Size(648, 461);
+            this.tabItem.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabItem.TabIndex = 3;
             this.tabItem.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabItem_Selecting);
             this.tabItem.Enter += new System.EventHandler(this.tabItem_Enter);
             // 
             // tabPage1
             // 
+            this.tabPage1.BackColor = System.Drawing.Color.Transparent;
             this.tabPage1.Controls.Add(this.listBoxGrammar);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -171,7 +182,6 @@
             this.tabPage1.Size = new System.Drawing.Size(640, 435);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scanning Phase";
-            this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Leave += new System.EventHandler(this.tabPage1_Leave);
             // 
             // listBoxGrammar
@@ -179,6 +189,7 @@
             this.listBoxGrammar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxGrammar.BackColor = System.Drawing.Color.White;
             this.listBoxGrammar.FormattingEnabled = true;
             this.listBoxGrammar.Location = new System.Drawing.Point(6, 90);
             this.listBoxGrammar.Name = "listBoxGrammar";
@@ -196,7 +207,7 @@
             this.tabPreprocess.Padding = new System.Windows.Forms.Padding(3);
             this.tabPreprocess.Size = new System.Drawing.Size(640, 435);
             this.tabPreprocess.TabIndex = 1;
-            this.tabPreprocess.Text = "Preprocessing Phase";
+            this.tabPreprocess.Text = "Preprocessing";
             this.tabPreprocess.UseVisualStyleBackColor = true;
             this.tabPreprocess.Enter += new System.EventHandler(this.TabPreprocess_Enter);
             // 
@@ -220,8 +231,7 @@
             // 
             // listBoxFollow
             // 
-            this.listBoxFollow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listBoxFollow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxFollow.FormattingEnabled = true;
             this.listBoxFollow.Location = new System.Drawing.Point(327, 65);
@@ -253,6 +263,18 @@
             this.ll_1_Tab.Text = "LL(1)";
             this.ll_1_Tab.UseVisualStyleBackColor = true;
             this.ll_1_Tab.Enter += new System.EventHandler(this.ll_1_Tab_Enter);
+            // 
+            // btnLLParseTree
+            // 
+            this.btnLLParseTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLLParseTree.Location = new System.Drawing.Point(6, 402);
+            this.btnLLParseTree.Name = "btnLLParseTree";
+            this.btnLLParseTree.Size = new System.Drawing.Size(628, 27);
+            this.btnLLParseTree.TabIndex = 3;
+            this.btnLLParseTree.Text = "Show Parse Tree";
+            this.btnLLParseTree.UseVisualStyleBackColor = true;
+            this.btnLLParseTree.Click += new System.EventHandler(this.btnLLParseTree_Click);
             // 
             // dataGridViewReport
             // 
@@ -326,6 +348,29 @@
             this.tabLR_0.UseVisualStyleBackColor = true;
             this.tabLR_0.Click += new System.EventHandler(this.tabLR_0_Click);
             this.tabLR_0.Enter += new System.EventHandler(this.tabLR_0_Enter);
+            // 
+            // btnShowParseTree
+            // 
+            this.btnShowParseTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowParseTree.Location = new System.Drawing.Point(197, 402);
+            this.btnShowParseTree.Name = "btnShowParseTree";
+            this.btnShowParseTree.Size = new System.Drawing.Size(437, 27);
+            this.btnShowParseTree.TabIndex = 5;
+            this.btnShowParseTree.Text = "Show Parse Tree";
+            this.btnShowParseTree.UseVisualStyleBackColor = true;
+            this.btnShowParseTree.Click += new System.EventHandler(this.btnShowParseTree_Click);
+            // 
+            // btnFSM
+            // 
+            this.btnFSM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFSM.Location = new System.Drawing.Point(6, 402);
+            this.btnFSM.Name = "btnFSM";
+            this.btnFSM.Size = new System.Drawing.Size(185, 27);
+            this.btnFSM.TabIndex = 5;
+            this.btnFSM.Text = "View Finite State Machine";
+            this.btnFSM.UseVisualStyleBackColor = true;
+            this.btnFSM.Click += new System.EventHandler(this.btnFSM_Click);
             // 
             // cmbGrammarType
             // 
@@ -410,52 +455,21 @@
             // 
             this.lblTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTime.AutoSize = true;
+            this.lblTime.BackColor = System.Drawing.Color.Transparent;
+            this.lblTime.ForeColor = System.Drawing.SystemColors.Window;
             this.lblTime.Location = new System.Drawing.Point(13, 474);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(35, 13);
             this.lblTime.TabIndex = 4;
             this.lblTime.Text = "label4";
             // 
-            // btnFSM
-            // 
-            this.btnFSM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFSM.Location = new System.Drawing.Point(6, 402);
-            this.btnFSM.Name = "btnFSM";
-            this.btnFSM.Size = new System.Drawing.Size(185, 27);
-            this.btnFSM.TabIndex = 5;
-            this.btnFSM.Text = "View Finite State Machine";
-            this.btnFSM.UseVisualStyleBackColor = true;
-            this.btnFSM.Click += new System.EventHandler(this.btnFSM_Click);
-            // 
-            // btnShowParseTree
-            // 
-            this.btnShowParseTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnShowParseTree.Location = new System.Drawing.Point(197, 402);
-            this.btnShowParseTree.Name = "btnShowParseTree";
-            this.btnShowParseTree.Size = new System.Drawing.Size(437, 27);
-            this.btnShowParseTree.TabIndex = 5;
-            this.btnShowParseTree.Text = "Show Parse Tree";
-            this.btnShowParseTree.UseVisualStyleBackColor = true;
-            this.btnShowParseTree.Click += new System.EventHandler(this.btnShowParseTree_Click);
-            // 
-            // btnLLParseTree
-            // 
-            this.btnLLParseTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLLParseTree.Location = new System.Drawing.Point(6, 402);
-            this.btnLLParseTree.Name = "btnLLParseTree";
-            this.btnLLParseTree.Size = new System.Drawing.Size(628, 27);
-            this.btnLLParseTree.TabIndex = 3;
-            this.btnLLParseTree.Text = "Show Parse Tree";
-            this.btnLLParseTree.UseVisualStyleBackColor = true;
-            this.btnLLParseTree.Click += new System.EventHandler(this.btnLLParseTree_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.Window;
+            this.BackgroundImage = global::Parser.Properties.Resources.blue_wavy_abstract_background_1409_897;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(672, 496);
             this.Controls.Add(this.lblTime);
             this.Controls.Add(this.tabItem);
