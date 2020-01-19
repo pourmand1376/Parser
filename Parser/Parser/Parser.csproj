@@ -61,8 +61,8 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="LLTable\GoTo.cs" />
-    <Compile Include="LLTable\LRType.cs" />
+    <Compile Include="LRTable\GoTo.cs" />
+    <Compile Include="LRTable\LRType.cs" />
     <Compile Include="Models\GrammarRules.cs" />
     <Compile Include="Lexical\LexicalAnalyzer.cs" />
     <Compile Include="Models\ISymbol.cs" />
@@ -78,9 +78,9 @@
     <Compile Include="Parse\TreeNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LLTable\Action.cs" />
-    <Compile Include="LLTable\LRGrammarTable.cs" />
-    <Compile Include="LLTable\ParserAction.cs" />
+    <Compile Include="LRTable\Action.cs" />
+    <Compile Include="LRTable\LRGrammarTable.cs" />
+    <Compile Include="LRTable\ParserAction.cs" />
     <Compile Include="States\FiniteStateMachine.cs" />
     <Compile Include="States\RowState.cs" />
     <Compile Include="States\State.cs" />
@@ -114,5 +114,6 @@
   <ItemGroup>
     <None Include="Resources\blue-wavy-abstract-background_1409-897.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

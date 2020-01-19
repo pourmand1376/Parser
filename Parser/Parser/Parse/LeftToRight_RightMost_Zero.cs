@@ -64,6 +64,7 @@ namespace Parser.Parse
                 ParseReportModel parseReport = new ParseReportModel();
                 parseReport.Stack =string.Join("",stack.ToArray().Reverse());
                 parseReport.InputString = string.Join("", terminals.Skip(position));
+               
                 int peek = (int) stack.Peek();
                 var textPosition = text[position];
                 var parserAction = _grammarTable.GetParserAction(peek, textPosition);
