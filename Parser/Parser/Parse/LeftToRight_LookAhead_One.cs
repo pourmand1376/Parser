@@ -44,28 +44,28 @@ namespace Parser.Parse
             {
                 if (symbolsValue is Variable variable)
                 {
-                    var variableNumber = MapperToNumber.MapVariableToNumber[variable.Value];
+                    var variableNumber = MapperToNumber.Map(variable);
                     foreach (IEnumerable<ISymbol> variableDefinition in variable.RuleSet.Definitions)
                     {
                         var firsts=preprocessor.FirstSet(new List<IEnumerable<ISymbol>>() {variableDefinition});
                         
                         foreach (Terminal terminal in firsts.Where(term=>!term.Equals(Terminal.Epsilon)))
                         {
-                            table[variableNumber, MapperToNumber.MapTerminalToNumber[terminal.Value]] = variableDefinition.ToList();
+                            table[variableNumber, MapperToNumber.Map(terminal)] = variableDefinition.ToList();
                         }
 
                         if (firsts.Contains(Terminal.Epsilon))
                         {
-                            var variableFollows = variable.Follows;
-                            foreach (Terminal variableFollow in variableFollows)
+                            var followTerminals = variable.Follows;
+                            foreach (Terminal terminal in followTerminals)
                             {
-                                var tableItem = table[variableNumber, MapperToNumber.MapTerminalToNumber[variableFollow.Value]];
+                                var tableItem = table[variableNumber, MapperToNumber.Map(terminal)];
                                 if(tableItem==null) 
-                                    table[variableNumber, MapperToNumber.MapTerminalToNumber[variableFollow.Value]] = new List<ISymbol> {Terminal.Epsilon, }.ToList();
+                                    table[variableNumber, MapperToNumber.Map(terminal)] = new List<ISymbol> {Terminal.Epsilon, }.ToList();
                                 else // error
                                 {
                                     tableItem.Add(Terminal.Error);
-                                    tableItem.Add(variableFollow);
+                                    tableItem.Add(terminal);
                                 }
                             }
                         }
@@ -105,22 +105,23 @@ namespace Parser.Parse
                         {
                             parseReport.Output = "Success";
                             position++;
-                            parseReport.InputString = string.Join("",terminalArray.Skip(position));
+                            parseReport.InputString = string.Join("", terminalArray.Skip(position));
                             _progress.Report(parseReport);
                             return true;
                         }
-                        position++;
-                        
-                        parseReport.Output = $"Matched {current} Terminal";
-
-                        var treeNode = treeNodes.Pop();
+                        else
+                        {
+                            position++;
+                            parseReport.Output = $"Matched {current} Terminal";
+                            var treeNode = treeNodes.Pop();
+                        }
                     }
 
                     
                 }
                 else if (popedValue is Variable variable)
                 {
-                    var itemsToBepushed=table[MapperToNumber.MapVariableToNumber[variable.Value], MapperToNumber.MapTerminalToNumber[current.Value]];
+                    var itemsToBepushed=table[MapperToNumber.Map(variable), MapperToNumber.Map(current)];
                     if (itemsToBepushed != null)
                     {
                         Stack<ISymbol> reversed = new Stack<ISymbol>();

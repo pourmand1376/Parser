@@ -113,15 +113,17 @@ namespace Parser.Parse
 
                             var firsts = variable.Firsts;
 
-                            if ( !firsts.Contains(Terminal.Epsilon) )
+                            if (!firsts.Contains(Terminal.Epsilon))
                             {
                                 canBeEmpty = false;
                                 terminals.AddRange(firsts);
                                 break;
                             }
-                            //else
+                            else
+                            {
                                 terminals.AddRange(firsts
                                     .Where(term => !term.Equals(Terminal.Epsilon)));
+                            }
                         }
                     }
                     //if you couldn't all any terminal at this rule
