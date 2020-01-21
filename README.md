@@ -1,7 +1,7 @@
 # Parser
 Implementation of LL(0), LR(0), SLR(1), CLR(1) algorithms in C#.
 
-This is done for educational purposes only. It only Parses specific strings that you pass. You can't pass regex as string!
+This is done for educational purposes only.
 
 # Topics Covered
 - First and follow terminals are calculated, even when grammer is left recursive.
